@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Guardia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link">./accueil</a></li>
+                <li><a href="bde.html" class="nav-link">./BDE</a></li>
+                <li><a href="evenement.html" class="nav-link">./evenement</a></li>
+                <li><a href="contact.html" class="nav-link">./contact</a></li>
+                <li><a href="login.html" class="nav-link">./login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="content-interior">
+        <h1>Connexion</h1>
+        <form action="/authenticate" method="POST" class="login-form">
+            <label for="username">Nom d'utilisateur :</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Se connecter</button>
+        </form>
+    </main>
+
+</body>
+</html>
