@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Guardia</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
+
+    <canvas id="matrixCanvas"></canvas>
 
     <header class="navbar">
         <nav>
@@ -20,6 +22,13 @@
         </nav>
     </header>
 
+    <main class="content-section">
+        <div class="logo-container">
+            <img src="image.png" alt="Logo du Bureau des Étudiants ERROR" class="site-logo logo-bde">
+            
+            <img src="guardia-logo-104x100.png.webp" alt="Logo de l'école GUARDIA" class="site-logo logo-guardia">
+        </div>
+
     <main class="content-interior">
         <h1>Connexion</h1>
         <form action="/authenticate" method="POST" class="login-form">
@@ -32,6 +41,8 @@
             <button type="submit">Se connecter</button>
         </form>
     </main>
+
+    <script src="js1.js"></script>
 
 </body>
 </html>

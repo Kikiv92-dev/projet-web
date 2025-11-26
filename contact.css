@@ -1,0 +1,354 @@
+/* Réinitialisation de base */
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    /* MODIFICATIONS POUR LA MATRICE EN ARRIÈRE-PLAN */
+    position: relative; /* Définit le contexte de superposition */
+    z-index: 1; /* Assure que le contenu du site reste au-dessus du canvas (z-index: -1) */
+}
+
+/* --- Style de la barre de navigation --- */
+
+.navbar {
+    width: 100%;
+    padding: 30px 0; /* Un peu plus de padding pour donner de l'air */
+    text-align: center;
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 70px; /* Augmenter l'espacement entre les liens de nav */
+}
+
+.navbar li {
+    display: inline;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #00ff00; 
+    font-size: 20px; 
+    text-transform: uppercase;
+    border-bottom: 2px solid #00ff00; 
+    padding-bottom: 7px; 
+    padding-left: 0; 
+    padding-right: 0; 
+    transition: 
+        color 0.3s ease, 
+        border-bottom-color 0.3s ease,
+        text-shadow 0.3s ease; 
+}
+
+.nav-link:hover {
+    color: #00e600; /* MODIFIÉ : Vert légèrement moins vif que #00ff66, mais toujours lumineux */
+    border-bottom-color: #00e600;
+    /* MODIFIÉ : Contour blanc plus fin (décalage à 0.5px) */
+    text-shadow: 
+        0.5px 0.5px 0 white,   
+        -0.5px -0.5px 0 white, 
+        0.5px -0.5px 0 white,  
+        -0.5px 0.5px 0 white;  
+    cursor: pointer; 
+}
+
+/* --- Style de la page d'accueil (Logos et Texte) --- */
+
+.content-section {
+    flex-grow: 1; 
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; /* Centrer le contenu verticalement dans l'espace restant */
+    padding-top: 0; 
+    padding-bottom: 50px; 
+    /* AJOUTÉ : Pour positionner les logos de manière absolue par rapport au conteneur */
+    position: relative; 
+}
+
+.logo-container {
+    display: flex;
+    gap: 10px; /* Réduction de l'espace entre les logos */
+    align-items: center;
+    
+    /* Positionnement en haut à gauche */
+    position: absolute;
+    top: -70px; /* MODIFIÉ : Place le conteneur 20px SOUS le haut de la section, évitant la navbar */
+    left: 07px; /* MODIFIÉ : Marge par rapport à la gauche */
+    z-index: 2; 
+    margin-bottom: 0; 
+}
+
+.site-logo {
+    /* MODIFIÉ : Réduction significative de la taille des logos */
+    width: 120px; 
+    height: 120px;
+    object-fit: contain;
+    /* MODIFIÉ : RETRAIT DU CARRÉ ET DU FOND */
+    /* border: 1px dashed #555; */
+    /* background-color: rgba(255, 255, 255, 0.05); */
+}
+
+.accueil-text {
+    color: #00ff00;
+    font-size: 100px; /* Augmenter la taille de police du texte de bienvenue */
+    text-align: center;
+    max-width: 600px; /* S'assurer que le texte ne s'étire pas trop */
+    line-height: 1.5; /* Améliorer la lisibilité */
+}
+/* NOUVEAU : Style pour le texte de bienvenue sous le titre principal */
+.text-text {
+    font-size: 35px; /* Taille plus petite */
+    color: #00ff00; /* Couleur blanche (ou #00ff00 si vous préférez le vert) */
+    text-align: center;
+    max-width: 600px;
+    margin-top: 5px; /* Petit espace sous le texte de bienvenue principal */
+    line-height: 1.4;
+}
+
+/* --- Style Spécifique à la Page Événements (MIS À JOUR POUR LE CENTRAGE ET LA FORME) --- */
+
+.page-title {
+    color: #00aaff;
+    font-size: 38px;
+    text-transform: uppercase;
+    margin-bottom: 60px;
+    border-bottom: 2px solid #00aaff; 
+    padding-bottom: 10px;
+    /* CENTRAGE DU TITRE */
+    text-align: center; 
+    /* Ajout d'une marge auto pour centrer le bloc souligné */
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content; /* Force le soulignement à être de la largeur du texte */
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 50px; 
+    width: 100%;
+    margin-top: 40px;
+    padding-bottom: 50px;
+}
+
+.event-card {
+    background-color: #05050e; 
+    border: 1px solid #1a1a2b; 
+    padding: 0;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    
+    /* NOUVEAU : Arrotondir les coins du bloc */
+    border-radius: 10px; 
+    
+    /* ASSUREZ UNE FORME PLUS RECTANGULAIRE VERTICALE */
+    height: 100%; /* S'assure que toutes les cartes sont de la même hauteur dans la grille */
+}
+
+/* Style interactif au survol */
+.event-card.interactive:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 5px 15px rgba(0, 170, 255, 0.4); 
+    cursor: pointer;
+}
+
+
+.event-image-placeholder {
+    width: 100%;
+    /* Réduction de la hauteur de l'image pour laisser plus de place au texte */
+    height: 150px; 
+    background-color: #1a1a2b; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px dotted #3a3a5a; 
+    /* Arrondi seulement les coins supérieurs pour que ça se connecte bien au body arrondi */
+    border-top-left-radius: 10px; 
+    border-top-right-radius: 10px;
+}
+
+.event-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border: none; 
+}
+
+.event-details {
+    /* Centrage de TOUT le contenu textuel à l'intérieur du bloc */
+    text-align: center; 
+    padding: 25px 20px; /* Augmentation du padding vertical pour la forme verticale */
+    flex-grow: 1; /* Permet aux détails de prendre l'espace restant */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Aide à la distribution du contenu */
+}
+
+.event-title {
+    color: #00aaff; 
+    font-size: 24px; 
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px dotted #3a3a5a; 
+    padding-bottom: 10px;
+}
+
+.event-info {
+    color: #aaaaaa;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.available-seats {
+    color: #00ff00; 
+    font-weight: bold;
+    margin-bottom: 15px; 
+}
+
+.event-description {
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 1.4;
+    padding-top: 10px;
+    border-top: 1px dotted #1a1a2b; 
+}
+
+/* Ajustement pour les petits écrans (responsive) */
+@media (max-width: 900px) {
+    .events-grid {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* --- Styles spécifiques pour l'animation Matrix (ajoutés) --- */
+
+#matrixCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Place le canvas derrière tout le contenu HTML */
+    opacity: 0.5; /* NOUVEAU : Réduit la luminosité de l'animation */
+}
+
+.container {
+    position: relative; 
+    z-index: 1; 
+}
+
+/* ========================================================== */
+/* --- AJOUT POUR LE FORMULAIRE DE CONTACT (Design Matrix) --- */
+/* ========================================================== */
+
+/* Le conteneur principal (.content-interior) est stylisé de manière similaire au formulaire de connexion */
+/* Assurez-vous qu'il est bien centré verticalement via .content-section */
+.content-section {
+    /* Gardez le CSS existant, y compris le justify-content: center; */
+    justify-content: center;
+}
+
+.content-interior {
+    /* Utilise les mêmes styles de cadre que le formulaire de connexion */
+    background-color: #05050e; 
+    border: 1px solid #00ff00; /* Bordure vert néon */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); /* Effet de lueur */
+    width: 90%;
+    max-width: 550px; /* Un peu plus large pour le message */
+    margin: 50px auto; /* Centre le bloc horizontalement et ajoute des marges */
+    z-index: 2; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Titre "Nous Contacter" (h1 dans le conteneur) */
+.content-interior h1 {
+    color: #00ff00; 
+    font-size: 36px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #00ff00; 
+    padding-bottom: 10px;
+    letter-spacing: 2px;
+    text-align: center;
+    width: fit-content;
+}
+
+/* Style du formulaire de contact (.contact-form) */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Style des labels pour le formulaire de contact */
+.contact-form label {
+    color: #00e600; 
+    font-size: 18px;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+/* Styles pour les champs de saisie (input et textarea) */
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea { /* Cible aussi le textarea */
+    width: 100%; 
+    padding: 12px 1px;
+    font-size: 16px;
+    color: #00ff00; 
+    background-color: #0a0a0a; 
+    border: 1px solid #007700; 
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none; 
+    resize: vertical; /* Permet de redimensionner verticalement le textarea */
+}
+
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form textarea:focus {
+    /* Effet de lueur verte au focus */
+    border-color: #00ff00; 
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); 
+}
+
+/* Styles pour le bouton "Envoyer" */
+.contact-form button[type="submit"] {
+    margin-top: 30px;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000000; 
+    background-color: #00ff00; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    align-self: center; /* Centrer le bouton */
+    width: 60%; 
+}
+
+.contact-form button[type="submit"]:hover {
+    background-color: #00e600; 
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
