@@ -351,3 +351,45 @@ body {
     background-color: #00e600; 
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
+
+.register-link {
+    /* Le transforme en un bloc pour lui donner une taille */
+    display: block; 
+    
+    /* Style de base (même vert néon que les liens de nav) */
+    color: #00ff00;
+    text-decoration: none; /* Enlève le soulignement par défaut */
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    
+    /* Positionnement */
+    text-align: center;
+    margin-top: 20px; /* Espace sous le bouton de connexion */
+    
+    /* Pour simuler un bouton de style "lien secondaire" */
+    border: 1px dotted #00ff00; /* Bordure pointillée néon */
+    padding: 8px 15px;
+    border-radius: 5px;
+    width: 50%; /* Plus étroit que le bouton principal */
+    align-self: center; /* Centrer le lien/bouton */
+    
+    transition: 
+        color 0.3s ease, 
+        background-color 0.3s ease, 
+        border-color 0.3s ease;
+}
+
+.register-link:hover {
+    color: #000000; /* Texte noir */
+    background-color: #00ff00; /* Fond vert néon au survol */
+    border-color: #00ff00;
+    cursor: pointer;
+}
+
+/* Optionnel : Ajuster légèrement la marge du bouton de connexion pour un meilleur espacement */
+.login-form button[type="submit"] {
+    /* Conserve vos styles existants */
+    /* ... */
+    margin-bottom: 0px; /* Assurez-vous qu'il n'y a pas trop de marge en bas */
+}
