@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Envoyé - Merci</title>
+    <style>
+        /* Style pour maintenir l'ambiance Matrix/Hacker */
+        body {
+            background-color: #000; /* Fond noir */
+            color: #0F0; /* Texte vert néon */
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            border: 2px solid #0F0;
+            padding: 40px 60px;
+            box-shadow: 0 0 20px #0F0; /* Effet lumineux */
+            animation: glow 1.5s infinite alternate; /* Ajoute une légère pulsation */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .home-link {
+            color: #0F0;
+            text-decoration: none;
+            border: 1px solid #0F0;
+            padding: 10px 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .home-link:hover {
+            background-color: #0F0;
+            color: #000;
+        }
+
+        /* Animation pour l'effet de lueur */
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px #0F0;
+            }
+            to {
+                box-shadow: 0 0 30px #0F0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>[ DATA TRANSFER COMPLETE ]</h1>
+        <p>Votre message a été transféré avec succès vers la console d'administration.</p>
+        <p>Nous vous répondrons dans les plus brefs délais.</p>
+
+        <a href="./index.html" class="home-link">Retour à l'Accueil</a>
+    </div>
+
+</body>
+</html>
