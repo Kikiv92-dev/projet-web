@@ -352,3 +352,53 @@ body {
     background-color: #00e600; 
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
 }
+
+/* ========================================================== */
+/* --- AJOUT POUR LES BOUTONS SOCIAUX (Bas à gauche) --- */
+/* ========================================================== */
+
+.social-buttons-container {
+    /* Positionnement Fixe en bas à gauche */
+    position: fixed;
+    bottom: 20px; /* Marge par rapport au bas */
+    left: 20px; /* Marge par rapport à la gauche */
+    z-index: 10; /* Assure que les boutons sont au-dessus de tout */
+    display: flex;
+    flex-direction: column; /* Alignement vertical */
+    gap: 15px; /* Espace entre les boutons */
+}
+
+.social-button {
+    /* Styles de base pour un bouton rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Taille du cercle */
+    height: 50px; /* Taille du cercle */
+    border-radius: 50%; /* Rendre le bouton rond */
+    text-decoration: none; /* Retirer le soulignement */
+    font-size: 24px; /* Taille de l'icône */
+    
+    /* Couleurs suivant la DA (vert néon) */
+    background-color: #00ff00; /* Vert vif */
+    color: #000000; /* Texte noir */
+    border: 2px solid #00ff00; /* Bordure assortie */
+    
+    /* Effet de transition pour l'animation au survol */
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); /* Légère lueur */
+}
+
+/* Effet de survol pour accentuer l'effet néon */
+.social-button:hover {
+    background-color: #00e600; /* Vert légèrement plus foncé au survol */
+    color: #ffffff; /* Texte blanc au survol */
+    box-shadow: 0 0 15px rgba(0, 255, 0, 1), 0 0 25px rgba(0, 255, 0, 0.8); /* Lueur plus intense */
+    transform: scale(1.1); /* Agrandissement subtil */
+}
+
+/* Style spécifique pour l'icône Font Awesome */
+.social-button i {
+    /* Assure que l'icône est bien positionnée au centre */
+    line-height: 1; 
+}
