@@ -41,8 +41,8 @@
                         <h2 class="event-title">Raclette Party</h2>
                         <p class="event-info">Date : 5 Décembre</p>
                         <p class="event-info available-seats">Places disponibles : 35/50</p>
-                        <p class="event-description">Tournoi de jeux, défis de sécurité et pizza illimitée pour finir l'année en beauté.</p>
-                        <a href="#" class="event-button">S'inscrire</a> </div>
+                        <p class="event-description">Une soirée chaleureuse entre étudiants autour d’une raclette géante, jeux et ambiance festive pour célébrer la fin d’année.</p>
+                        <a href="page dacceil raglette.html" class="event-button" data-template-id="raclette-template">S'inscrire</a> </div>
                 </div>
                 
                 <div class="event-card interactive">
@@ -53,9 +53,8 @@
                         <h2 class="event-title">BDE Santa Secret</h2>
                         <p class="event-info">Date : 15 Décembre</p>
                         <p class="event-info available-seats">Places disponibles : 8/100</p>
-                        <p class="event-description">Intervention d'un expert sur les nouvelles techniques d'attaques par ingénierie sociale.</p>
-                        <a href="#" class="event-button">S'inscrire</a> </div>
-                        
+                        <p class="event-description">Un événement spécial Noël rempli d’animations, de surprises et d’une ambiance festive pour clôturer l’année.</p>
+                        <a href="noel page dacceuil.html" class="event-button" data-template-id="noel-template">S'inscrire</a> </div>
                 </div>
 
                 <div class="event-card interactive">
@@ -66,7 +65,7 @@
                         <h2 class="event-title">Soirée de Noël</h2>
                         <p class="event-info">Date : 20 Décembre</p>
                         <p class="event-info available-seats is-full">Places disponibles : COMPLET</p> 
-                        <p class="event-description">Activités de team building et challenges sportifs pour souder les promotions.</p>
+                        <p class="event-description">Une soirée festive pour célébrer Noël entre étudiants, avec animations et activités pour renforcer l’esprit d’équipe.</p>
                         <a href="#" class="event-button is-disabled">COMPLET</a> </div>
                 </div>
 
@@ -78,12 +77,143 @@
                         <h2 class="event-title">Fête de la galette des rois</h2>
                         <p class="event-info">Date : 15 Janvierr</p>
                         <p class="event-info available-seats">Places disponibles : 12/15</p>
-                        <p class="event-description">Découvrez l'envers du décor d'un centre de données de haute sécurité.</p>
-                        <a href="#" class="event-button">S'inscrire</a> </div>
+                        <p class="event-description">Partagez un moment convivial autour de la galette et découvrez une ambiance chaleureuse pour bien commencer l’année.</p>
+                        <a href="galete des rois page.html" class="event-button" data-template-id="galette-template">S'inscrire</a> </div>
                 </div>
 
         </div>
     </main>
+
+    <template id="raclette-template">
+        <div class="raglette-wrapper">
+            <div class="registration-container">
+                <h1><span class="raclette-icon">🧀</span> Inscription Soirée Raclette <span class="raclette-icon">🍷</span></h1>
+                <p>Préparez-vous pour le fromage fondu, les pommes de terre et la bonne humeur !</p>
+                <form action="#" method="POST" class="registration-form">
+                    <div class="form-group">
+                        <label for="nom-rac">Nom :</label> <span class="input-icon" style="color: #FFD700;">🧀</span>
+                        <input type="text" id="nom-rac" name="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom-rac">Prénom :</label> <span class="input-icon" style="color: #D2B48C;">🥔</span>
+                        <input type="text" id="prenom-rac" name="prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero-rac">Numéro de téléphone :</label> <span class="input-icon" style="color: #8B0000;">🍷</span>
+                        <input type="tel" id="numero-rac" name="numero" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Je fonce pour le fromage ! <span class="btn-icon">🔥</span></button>
+                </form>
+            </div>
+        </div>
+    </template>
+    
+    <template id="galette-template">
+        <div class="galette-wrapper">
+            <div class="registration-container galette-form-container">
+                <h1>👑 Inscription Fête de la Galette des Rois</h1>
+                <p>Veuillez remplir les informations pour valider votre participation au tirage de la fève !</p>
+                <form action="#" method="POST" class="registration-form">
+                    <div class="form-group">
+                        <label for="nom-gal">Nom :</label>
+                        <input type="text" id="nom-gal" name="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom-gal">Prénom :</label>
+                        <input type="text" id="prenom-gal" name="prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero-gal">Numéro de téléphone :</label>
+                        <input type="tel" id="numero-gal" name="numero" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                    </div>
+                    <button type="submit" class="submit-btn galette-submit-btn">Je m'inscris !</button>
+                </form>
+            </div>
+        </div>
+    </template>
+    
+    <template id="noel-template">
+    <div class="noel-wrapper">
+        <div class="registration-container noel-form-container">
+            <h1></span> Inscription Soirée de Noël</h1><span class="noel-icon">🌟
+            <p>Réservez votre place pour une soirée magique d'échange de cadeaux et de bonne humeur !</p>
+            <form action="#" method="POST" class="registration-form">
+                <div class="form-group">
+                    <label for="nom-noel">Nom :</label>
+                    <span class="input-icon">🎁</span> <input type="text" id="nom-noel" name="nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="prenom-noel">Prénom :</label>
+                    <span class="input-icon">🎄</span> <input type="text" id="prenom-noel" name="prenom" required>
+                </div>
+                <div class="form-group">
+                    <label for="numero-noel">Numéro de téléphone :</label>
+                    <span class="input-icon">🔔</span> <input type="tel" id="numero-noel" name="numero" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                </div>
+                <button type="submit" class="submit-btn noel-submit-btn">
+                    Joyeuse Inscription <span class="btn-icon">🎅</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</template>
+
+    <div id="modal" class="modal hidden" aria-hidden="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-box">
+            <button class="modal-close" aria-label="Fermer">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modal');
+            const modalBody = modal.querySelector('.modal-body');
+            const closeBtn = modal.querySelector('.modal-close');
+            
+            // Sélectionne tous les boutons qui ouvrent une modale (Raclette ou Galette)
+            const modalButtons = document.querySelectorAll('a.event-button[data-template-id]');
+
+            modalButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    // Récupère l'ID du template à utiliser (raclette-template ou galette-template)
+                    const templateId = btn.getAttribute('data-template-id');
+                    const template = document.getElementById(templateId);
+
+                    if (!template) return;
+
+                    // Injecte le contenu du template
+                    modalBody.innerHTML = template.innerHTML;
+                    
+                    // Affiche la modale
+                    modal.classList.remove('hidden');
+                    modal.setAttribute('aria-hidden', 'false');
+
+                    // Attache le gestionnaire de formulaire DANS la modale
+                    const form = modalBody.querySelector('form');
+                    if (form) {
+                        form.addEventListener('submit', (ev) => {
+                            ev.preventDefault();
+                            const submitBtn = form.querySelector('.submit-btn');
+                            if (submitBtn) {
+                                submitBtn.textContent = 'Inscription prise !';
+                                submitBtn.disabled = true;
+                            }
+                            // Ferme la modale après un court délai
+                            setTimeout(() => { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); }, 1300);
+                        });
+                    }
+                });
+            });
+
+            // Gestionnaires de fermeture (inchangés)
+            closeBtn.addEventListener('click', () => { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); });
+            modal.addEventListener('click', (ev) => { if (ev.target === modal || ev.target.classList.contains('modal-overlay')) { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); } });
+        });
+    </script>
+
     <script src="js1.js"></script>
 
 </body>
