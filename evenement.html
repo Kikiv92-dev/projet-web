@@ -17,7 +17,7 @@
                 <li><a href="bde.html" class="nav-link">./BDE</a></li>
                 <li><a href="evenement.html" class="nav-link">./evenement</a></li>
                 <li><a href="contact.html" class="nav-link">./contact</a></li>
-                <li><a href="login.html" class="nav-link">./login</a></li>
+                <li><a href="login.php" class="nav-link">./login</a></li>
             </ul>
         </nav>
     </header>
@@ -28,6 +28,8 @@
             
             <img src="guardia-logo-104x100.png.webp" alt="Logo de l'école GUARDIA" class="site-logo logo-guardia">
         </div>
+
+        <div id="status-message-container" role="alert"></div>
 
         <div class="content-interior"> <h1 class="page-title">03\_ÉVÉNEMENTS À VENIR</h1>
             
@@ -89,7 +91,8 @@
             <div class="registration-container">
                 <h1><span class="raclette-icon">🧀</span> Inscription Soirée Raclette <span class="raclette-icon">🍷</span></h1>
                 <p>Préparez-vous pour le fromage fondu, les pommes de terre et la bonne humeur !</p>
-                <form action="#" method="POST" class="registration-form">
+                <form action="inscription_event.php" method="POST" class="registration-form">
+                    <input type="hidden" name="evenement" value="Raclette Party">
                     <div class="form-group">
                         <label for="nom-rac">Nom :</label> <span class="input-icon" style="color: #FFD700;">🧀</span>
                         <input type="text" id="nom-rac" name="nom" required>
@@ -99,10 +102,10 @@
                         <input type="text" id="prenom-rac" name="prenom" required>
                     </div>
                     <div class="form-group">
-                        <label for="numero-rac">Numéro de téléphone :</label> <span class="input-icon" style="color: #8B0000;">🍷</span>
-                        <input type="tel" id="numero-rac" name="numero" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Je fonce pour le fromage ! <span class="btn-icon">🔥</span></button>
+                        <label for="numero-rac">Numéro de téléphone :</label> <span class="input-icon" style="color: #8B0000;">🍷</span>
+                        <input type="tel" id="numero-rac" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Je fonce pour le fromage ! <span class="btn-icon">🔥</span></button>
                 </form>
             </div>
         </div>
@@ -112,9 +115,10 @@
         <div class="galette-wrapper">
             <div class="registration-container galette-form-container">
                 <h1>👑 Inscription Fête de la Galette des Rois</h1>
-                <p>Veuillez remplir les informations pour valider votre participation au tirage de la fève !</p>
-                <form action="#" method="POST" class="registration-form">
-                    <div class="form-group">
+                <p>Veuillez remplir les informations pour valider votre participation au tirage de la fève !</p>
+                <form action="inscription_event.php" method="POST" class="registration-form">
+                    <input type="hidden" name="evenement" value="Fête de la galette des rois">
+                    <div class="form-group">
                         <label for="nom-gal">Nom :</label>
                         <input type="text" id="nom-gal" name="nom" required>
                     </div>
@@ -123,10 +127,10 @@
                         <input type="text" id="prenom-gal" name="prenom" required>
                     </div>
                     <div class="form-group">
-                        <label for="numero-gal">Numéro de téléphone :</label>
-                        <input type="tel" id="numero-gal" name="numero" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
-                    </div>
-                    <button type="submit" class="submit-btn galette-submit-btn">Je m'inscris !</button>
+                        <label for="numero-gal">Numéro de téléphone :</label>
+                        <input type="tel" id="numero-gal" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                    </div>
+                    <button type="submit" class="submit-btn galette-submit-btn">Je m'inscris !</button>
                 </form>
             </div>
         </div>
@@ -135,10 +139,11 @@
     <template id="noel-template">
     <div class="noel-wrapper">
         <div class="registration-container noel-form-container">
-            <h1></span> Inscription Soirée de Noël</h1><span class="noel-icon">🌟
-            <p>Réservez votre place pour une soirée magique d'échange de cadeaux et de bonne humeur !</p>
-            <form action="#" method="POST" class="registration-form">
-                <div class="form-group">
+            <h1><span class="noel-icon">🌟</span> Inscription Soirée de Noël</h1>
+            <p>Réservez votre place pour une soirée magique d'échange de cadeaux et de bonne humeur !</p>
+            <form action="inscription_event.php" method="POST" class="registration-form">
+                <input type="hidden" name="evenement" value="Soirée de Noël">
+                <div class="form-group">
                     <label for="nom-noel">Nom :</label>
                     <span class="input-icon">🎁</span> <input type="text" id="nom-noel" name="nom" required>
                 </div>
@@ -147,10 +152,10 @@
                     <span class="input-icon">🎄</span> <input type="text" id="prenom-noel" name="prenom" required>
                 </div>
                 <div class="form-group">
-                    <label for="numero-noel">Numéro de téléphone :</label>
-                    <span class="input-icon">🔔</span> <input type="tel" id="numero-noel" name="numero" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
-                </div>
-                <button type="submit" class="submit-btn noel-submit-btn">
+                    <label for="numero-noel">Numéro de téléphone :</label>
+                    <span class="input-icon">🔔</span> <input type="tel" id="numero-noel" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                </div>
+                <button type="submit" class="submit-btn noel-submit-btn">
                     Joyeuse Inscription <span class="btn-icon">🎅</span>
                 </button>
             </form>
@@ -190,27 +195,14 @@
                     // Affiche la modale
                     modal.classList.remove('hidden');
                     modal.setAttribute('aria-hidden', 'false');
-
-                    // Attache le gestionnaire de formulaire DANS la modale
-                    const form = modalBody.querySelector('form');
-                    if (form) {
-                        form.addEventListener('submit', (ev) => {
-                            ev.preventDefault();
-                            const submitBtn = form.querySelector('.submit-btn');
-                            if (submitBtn) {
-                                submitBtn.textContent = 'Inscription prise !';
-                                submitBtn.disabled = true;
-                            }
-                            // Ferme la modale après un court délai
-                            setTimeout(() => { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); }, 1300);
-                        });
-                    }
                 });
             });
 
             // Gestionnaires de fermeture (inchangés)
             closeBtn.addEventListener('click', () => { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); });
             modal.addEventListener('click', (ev) => { if (ev.target === modal || ev.target.classList.contains('modal-overlay')) { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); } });
+
+            
         });
     </script>
 

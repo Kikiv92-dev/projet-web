@@ -1,0 +1,240 @@
+/* ADMIN-SPECIFIC STYLING */
+body {
+    background-color: #121212; /* Black background */
+    font-family: Arial, sans-serif;
+    color: #00ff00;
+    text-align: center;
+}
+
+#user-container {
+    display: flex;
+    height: 425px; /* Full screen height */
+    
+}
+
+/* SIDEBAR STYLING */
+#sidebar {
+    width: 250px;
+    background-color: transparent; /* Dark, solid color */
+    backdrop-filter: blur(5px); /* Adjust the '5px' to control the intensity of the blur */
+    
+    /* For older browser compatibility (safari) */
+    -webkit-backdrop-filter: blur(5px);
+    color: #00ff00;
+    padding: 20px 0;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+#sidebar nav ul {
+    list-style: none;
+}
+
+#sidebar nav ul li a {
+    display: block;
+    padding: 15px 25px;
+    color: #00ff00;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+#sidebar nav ul li a:hover,
+#sidebar nav ul li a.active {
+    background-color: transparent; /* Slightly lighter shade on hover/active */
+    backdrop-filter: blur(5px); /* Adjust the '5px' to control the intensity of the blur */
+    
+    /* For older browser compatibility (safari) */
+    -webkit-backdrop-filter: blur(5px);
+    border-left: 5px solid #00ff00; /* Highlight bar */
+}
+
+/* MAIN CONTENT STYLING */
+#content {
+    flex-grow: 1; /* Takes up all remaining space */
+    padding: 30px;
+}
+
+#content header {
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+#main-view {
+    background-color: transparent;
+    backdrop-filter: blur(5px); /* Adjust the '5px' to control the intensity of the blur */
+    
+    /* For older browser compatibility (safari) */
+    -webkit-backdrop-filter: blur(5px);
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #00ff00;
+}
+
+/* QUICK STATS STYLING */
+.stats-grid {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background-color: transparent;
+    backdrop-filter: blur(5px); /* Adjust the '5px' to control the intensity of the blur */
+    
+    /* For older browser compatibility (safari) */
+    -webkit-backdrop-filter: blur(5px);
+
+    padding: 20px;
+    border-radius: 5px;
+    flex: 1;
+    text-align: center;
+    border: 1px solid #00ff00;
+    font-size: 0.9em;
+    color: #00ff00;
+}
+
+.stat-card span {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    color: #00ff00;
+    margin-top: 5px;
+    font-family: 'Matrix Code', monospace;
+}
+
+/* Styling the Username Display */
+#user-info {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    /* If you centered the header text, this element will also be centered */
+}
+
+/* Styling the actual username text */
+.username-display {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #00ff00; /* Neon Green Accent */
+    /* Add a subtle underline for emphasis */
+    border-bottom: 1px dotted #00ff00; 
+}
+
+/* CSS for the Canvas Background */
+#matrixCanvas {
+    position: fixed; /* Keeps the canvas in place even when the user scrolls */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* CRITICAL: Puts the canvas behind all other content */
+    display: block; /* Ensure it behaves as a block element */
+}
+
+/* Ensure your main content wrapper has a background color to block the canvas */
+/* We'll make it semi-transparent so the rain still shows through */
+#content-wrapper {
+    /* To see the canvas, we must remove the body background color */
+    background-color: transparent; 
+    /* Or use a semi-transparent black for a subtle effect */
+    /* background-color: rgba(0, 0, 0, 0.5); */ 
+    
+    /* Ensure the wrapper covers the screen */
+    min-height: 100vh; 
+}
+
+/* Also, remove the body background color if it was set to a solid color */
+body {
+    background-color: transparent; /* Or a very dark color like #000 */
+}
+
+/* Keyframes to randomly adjust color and opacity */
+@keyframes flicker {
+    0%, 100% { 
+        opacity: 1; 
+        text-shadow: 0 0 5px #00ff00;
+    }
+    40% { 
+        opacity: 0.5; 
+        text-shadow: none;
+    }
+    90% { 
+        opacity: 0.8; 
+    }
+}
+
+/* Apply the animation */
+.data-flicker {
+    color: #00ff00;
+    font-weight: bold;
+    animation: flicker 2s linear infinite; /* Random speed and infinite loop */
+}
+/* Container for alignment */
+.processing-container {
+    width: 300px;
+    margin: 20px auto;
+    text-align: center;
+    color: #00ff00;
+}
+
+/* The actual bar element */
+.progress-bar {
+    height: 10px;
+    background-color: #00ff00; /* Neon Green */
+    margin: 10px 0;
+    
+    /* Apply the animation */
+    animation: loading-scan 3s linear infinite;
+    width: 0%; /* Start at 0 width */
+}
+
+/* Keyframes to make the bar grow and reset */
+@keyframes loading-scan {
+    0% {
+        width: 0%;
+        opacity: 0.5;
+    }
+    50% {
+        width: 100%;
+        opacity: 1;
+    }
+    100% {
+        width: 0%;
+        opacity: 0.5;
+    }
+}
+/* 1. Define the animation */
+@keyframes scan-sweep {
+    0% {
+        background-position: right top; /* Start the sweep line on the left */
+    }
+    100% {
+        background-position: left top; /* Move the sweep line to the right */
+    }
+}
+
+/* 2. Apply the effect to the container */
+.stats-grid {
+    /* CRITICAL: Must be relative for the background-position to work */
+    position: relative; 
+    
+    /* Create the background with a single vertical line */
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0) 49%, /* Transparent area before the line */
+        rgba(0, 255, 0, 0.2) 50%, /* The subtle green scan line */
+        rgba(0, 0, 0, 0) 51% /* Transparent area after the line */
+    );
+    /* Make the background large so the line can move */
+    background-size: 200% 100%; 
+    
+    /* Apply the animation */
+    animation: scan-sweep 5s linear infinite; /* 5-second duration, constant speed, loops forever */
+}
+

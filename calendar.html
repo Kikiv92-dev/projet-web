@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDE Hacking - Calendrier des Événements</title>
+    <link rel="stylesheet" href="calendar-styles.css"> 
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css' rel='stylesheet' />
+    <style>
+        body { 
+            background-color: #000000; /* Or your exact dark background color */
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <div id="user-container">
+        <aside id="sidebar">
+            <div class="logo">BDE User Panel</div>
+            <nav>
+                <ul>
+                    <li><a href="accueilmembre.php" > ./Dashboard</a></li>
+                    <li><a href="#" class="active"> ./Calendrier</a></li>
+                    <li><a href="deconnexion.php" id="logout-btn"> ./Déconnexion</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="content">
+            <header>
+                <h2>Calendrier Officiel des Événements</h2>
+                  <div id="user-info">
+                     <p>Connecté en tant que: <span class="username-display">CyberUser1</span></p>
+                  </div>
+                <p>Retrouvez tous les CTF, ateliers et réunions du BDE.</p>
+            </header>
+            
+            <section id="main-view">
+                <h3>Calendrier des Événements</h3>
+                <div id="event-calendar">
+        </div>
+
+                <div id="dynamic-data-placeholder">
+                    </div>
+            </section>
+        </main>
+    </div>
+    <script src="js1.js"></script>
+    <script src='calendar-init.js'></script>
+    
+    
+    
+</div>
+</body>
+</html>

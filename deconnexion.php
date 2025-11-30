@@ -9,6 +9,6 @@ $_SESSION = array();
 session_destroy();
  
 // Rediriger vers la page de connexion
-header("location: login.html");
+header("location: login.php");
 exit;
 ?>

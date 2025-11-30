@@ -63,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Tenter d'exécuter l'instruction préparée
             if(mysqli_stmt_execute($stmt)){
                 // Si succès, REDIRECTION !
-                header("location: login.html?status=success_inscription");
+                header("location: login.php?status=success_inscription");
                 exit; // Il est crucial d'arrêter le script après une redirection
             } else{
                 echo "Erreur lors de l'enregistrement de l'utilisateur : " . mysqli_error($conn);
@@ -132,7 +132,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             ?>
  
          <button type="submit">S'inscrire</button>
-            <a href="login.html" class="register-link">Se connecter</a>
+            <a href="login.php" class="register-link">Se connecter</a>
         </form>
  </main>
 

@@ -1,70 +1,76 @@
 <?php
-// Initialiser la session
+// Démarrage de la session PHP pour utiliser $_SESSION
 session_start();
  
-// Vérifier si l'utilisateur est déjà connecté, si oui, rediriger vers la page d'accueil
+// Initialisation des variables d'erreur et des valeurs du formulaire
+$username = $password = "";
+$username_err = $password_err = $login_err = "";
+
+// Vérifier si l'utilisateur est déjà connecté, si oui, le rediriger
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: accueil_membre.php");
+    // Redirection par rôle
+    if ($_SESSION["role"] == "administrateur") {
+        header("location: admin.php");
+    } else {
+        header("location: accueilmembre.php");
+    }
     exit;
 }
  
-// Inclure le fichier de configuration de la BDD
+// Inclure le fichier de connexion à la base de données
 require_once "config.php";
- 
-$username = $password = "";
-$username_err = $password_err = $login_err = "";
  
 // Traitement des données du formulaire
 if($_SERVER["REQUEST_METHOD"] == "POST"){
- 
-    // Valider le nom d'utilisateur
+
+    // 1. VALIDATION DU NOM D'UTILISATEUR
     if(empty(trim($_POST["username"]))){
         $username_err = "Veuillez entrer un nom d'utilisateur.";
     } else{
         $username = trim($_POST["username"]);
     }
     
-    // Valider le mot de passe
+    // 2. VALIDATION DU MOT DE PASSE
     if(empty(trim($_POST["password"]))){
         $password_err = "Veuillez entrer votre mot de passe.";
     } else{
         $password = trim($_POST["password"]);
     }
     
-    // Vérifier les identifiants
+    // 3. VÉRIFICATION DES ERREURS AVANT DE CONTINUER
     if(empty($username_err) && empty($password_err)){
-        // Préparer une instruction SELECT
-        $sql = "SELECT id, username, password FROM utilisateurs WHERE username = ?";
+        
+        // Requête SQL pour récupérer l'utilisateur et son rôle (CORRIGÉE : 'utilisateur')
+        $sql = "SELECT id, username, password, role FROM utilisateurs WHERE username = ?";
         
         if($stmt = mysqli_prepare($conn, $sql)){
-            // Lier les variables à l'instruction préparée comme paramètres
             mysqli_stmt_bind_param($stmt, "s", $param_username);
-            
-            // Définir les paramètres
             $param_username = $username;
             
-            // Tenter d'exécuter l'instruction préparée
             if(mysqli_stmt_execute($stmt)){
-                // Stocker le résultat
                 mysqli_stmt_store_result($stmt);
                 
-                // Vérifier si le nom d'utilisateur existe, si oui, vérifier le mot de passe
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Lier les variables de résultat
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $role);
+                    
                     if(mysqli_stmt_fetch($stmt)){
-                        // Utiliser password_verify() pour vérifier le mot de passe haché
+                        // VÉRIFICATION DU MOT DE PASSE
                         if(password_verify($password, $hashed_password)){
-                            // Mot de passe correct, démarrer une nouvelle session
-                            session_start();
                             
-                            // Stocker les données dans des variables de session
+                            // Succès! Stocker les données de session
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["username"] = $username;
+                            $_SESSION["role"] = $role;                            
                             
-                            // Rediriger l'utilisateur vers la page d'accueil après connexion
-                            header("location: accueil_membre.php");
+                            // REDIRECTION CONDITIONNELLE BASÉE SUR LE RÔLE
+                            if ($role == "administrateur") {
+                                header("location: admin.php");
+                            } else {
+                                header("location: accueilmembre.php");
+                            }
+                            exit;
                         } else{
                             // Mot de passe invalide
                             $login_err = "Nom d'utilisateur ou mot de passe invalide.";
@@ -75,15 +81,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $login_err = "Nom d'utilisateur ou mot de passe invalide.";
                 }
             } else{
-                echo "Oops! Quelque chose a mal tourné. Veuillez réessayer plus tard.";
+                // Erreur d'exécution de la requête
+                echo "Oops! Une erreur de base de données est survenue. Veuillez réessayer plus tard.";
             }
-
-            // Fermer l'instruction
             mysqli_stmt_close($stmt);
         }
     }
-    
-    // Fermer la connexion
-    mysqli_close($conn);
+    // Fermer la connexion uniquement si elle a été ouverte
+    if (isset($conn)) {
+        mysqli_close($conn);
+    }
 }
 ?>
