@@ -3,17 +3,7 @@
 session_start();
 $user_username = htmlspecialchars($_SESSION["username"]);
 
-
-// ==============================================
-// 1. CONFIGURATION ET CONNEXION BDD (À MODIFIER)
-// ==============================================
-$db_host = 'localhost';      
-$db_name = 'guardia_bde';    
-$db_user = 'root';           
-$db_pass = $_ENV['DB_PASSWORD'];
-
-$pdo = null; 
-$evenements_json = "[]"; // Initialisation du JSON pour le calendrier
+require_once "config.php";
 
 try {
     $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);

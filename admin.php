@@ -4,14 +4,7 @@ session_start();
 // ...
 $admin_username = htmlspecialchars($_SESSION["username"]);
 
-
-// ==============================================
-// 1. CONFIGURATION DE LA BASE DE DONNÉES (À MODIFIER)
-// ==============================================
-$db_host = 'localhost';      // Généralement 'localhost'
-$db_name = 'guardia_bde';    // Nom de votre base de données
-$db_user = 'root';           // Votre nom d'utilisateur MySQL
-$db_pass = $_ENV['DB_PASSWORD'];
+require_once "config.php";
 
 $pdo = null; // Initialisation de la variable de connexion
 
