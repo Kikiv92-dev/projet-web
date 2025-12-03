@@ -1,31 +1,37 @@
 <?php
-// ... (Initialisation et config.php)
+// 1. FORCEZ LE DÉBOGAGE
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// 2. INCLURE LA CONFIGURATION DE LA BDD
+require_once "config.php";
+
+$username = $password = "";
+$username_err = $password_err = "";
 
 // 3. TRAITEMENT DU FORMULAIRE (DOIT ÊTRE AU DÉBUT !)
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
+    // Note : Pensez à corriger "utilisateurs" en "utilisateur" si vous n'avez pas renommé la table
     $table_name = "utilisateurs"; 
 
+    // Valider le nom d'utilisateur
     if(empty(trim($_POST["username"]))){
         $username_err = "Veuillez entrer un nom d'utilisateur.";
-    } else {
-        // 2. Préparer l'instruction SELECT uniquement si le champ n'est PAS vide
+    } else{
+        // Préparer une instruction SELECT
         $sql = "SELECT id FROM $table_name WHERE username = ?";
-
+        // ... (le reste du traitement pour $username_err)
         if($stmt = mysqli_prepare($conn, $sql)){
-            // Assigner et lier le paramètre pour la vérification d'existence
-            $param_username = trim($_POST["username"]);
             mysqli_stmt_bind_param($stmt, "s", $param_username);
-            
+            $param_username = trim($_POST["username"]);
             if(mysqli_stmt_execute($stmt)){
                 mysqli_stmt_store_result($stmt);
-                
                 if(mysqli_stmt_num_rows($stmt) == 1){
-                    // L'utilisateur existe déjà
                     $username_err = "Ce nom d'utilisateur est déjà pris.";
-                } else {
-                    // L'utilisateur est unique, on assigne la variable pour l'INSERT
-                    $username = $param_username;
+                } else{
+                    $username = trim($_POST["username"]);
                 }
             } else{
                 $username_err = "Oops! Quelque chose a mal tourné. Veuillez réessayer plus tard.";
@@ -33,14 +39,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             mysqli_stmt_close($stmt);
         }
     }
-    // ************ FIN DE CORRECTION ************
     
     // Valider le mot de passe
-    $min_password_length = 8; // Meilleure pratique : utiliser 8 au lieu de 6
     if(empty(trim($_POST["password"]))){
         $password_err = "Veuillez entrer un mot de passe.";     
-    } elseif(strlen(trim($_POST["password"])) < $min_password_length){
-        $password_err = "Le mot de passe doit contenir au moins " . $min_password_length . " caractères.";
+    } elseif(strlen(trim($_POST["password"])) < 6){
+        $password_err = "Le mot de passe doit contenir au moins 6 caractères.";
     } else{
         $password = trim($_POST["password"]);
     }
@@ -48,23 +52,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Vérifier les erreurs avant d'insérer dans la base de données
     if(empty($username_err) && empty($password_err)){
         
+        // Préparer une instruction INSERT
         $sql = "INSERT INTO $table_name (username, password) VALUES (?, ?)";
-          
+         
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
-            
-            // Les variables sont assignées APRES le bind_param, c'est l'ordre correct pour mysqli
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
             
             // Tenter d'exécuter l'instruction préparée
             if(mysqli_stmt_execute($stmt)){
+                // Si succès, REDIRECTION !
                 header("location: login.php?status=success_inscription");
-                exit;
+                exit; // Il est crucial d'arrêter le script après une redirection
             } else{
-                // Dans un environnement de production, n'affichez JAMAIS mysqli_error() à l'utilisateur !
-                error_log("DB Error: " . mysqli_error($conn)); 
-                echo "Une erreur interne s'est produite lors de l'enregistrement.";
+                echo "Erreur lors de l'enregistrement de l'utilisateur : " . mysqli_error($conn);
             }
             mysqli_stmt_close($stmt);
         }
@@ -112,7 +114,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
          <label for="username">Nom d'utilisateur :</label>
                      <input type="text" id="username" name="username" 
-                   echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
+                   value="<?php echo $username ?? ''; ?>" 
                    class="<?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" required>
             <?php 
             if(!empty($username_err)){
