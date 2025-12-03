@@ -3,7 +3,7 @@
 // 1. GESTION DES ERREURS (CRITIQUE EN PRODUCTION !)
 // =================================================================
 // Désactiver l'affichage des erreurs en production.
-ini_set('display_errors', 0); 
+ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 

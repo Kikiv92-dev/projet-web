@@ -4,7 +4,7 @@
 // =================================================================
 // Désactiver l'affichage des erreurs en production pour ne pas exposer d'informations.
 // Les erreurs seront enregistrées dans les logs du serveur.
-ini_set('display_errors', 0); 
+ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
@@ -17,7 +17,7 @@ $username_err = $password_err = $confirm_password_err = "";
 // 3. TRAITEMENT DU FORMULAIRE
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    $table_name = "utilisateurs"; 
+    $table_name = "utilisateurs";
 
     // =================================================================
     // A. VALIDATION DU NOM D'UTILISATEUR (avec Regex pour l'assainissement)
@@ -38,7 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Utilisation de l'approche Orientée Objet pour la préparation (plus moderne)
             if($stmt = $conn->prepare($sql)){
                 $stmt->bind_param("s", $param_username);
-                $param_username = $input_username; 
+                $param_username = $input_username;
                 
                 if($stmt->execute()){
                     $stmt->store_result();
@@ -61,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // B. VALIDATION DU MOT DE PASSE ET CONFIRMATION
     // =================================================================
     if(empty(trim($_POST["password"]))){
-        $password_err = "Veuillez entrer un mot de passe.";     
+        $password_err = "Veuillez entrer un mot de passe.";
     } elseif(strlen(trim($_POST["password"])) < 6){
         $password_err = "Le mot de passe doit contenir au moins 6 caractères.";
     } else{
@@ -96,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             if($stmt->execute()){
                 // SUCCÈS : REDIRECTION ET ARRÊT DU SCRIPT
                 header("location: login.php?status=success_inscription");
-                exit; 
+                exit;
             } else{
                 // Sécurité : Enregistrement de l'erreur interne, message générique à l'utilisateur
                 error_log("Erreur SQL lors de l'insertion de l'utilisateur : " . $stmt->error);
@@ -147,28 +147,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="login-form">
             
             <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" 
-                value="<?php echo htmlspecialchars($username ?? ''); ?>" 
+            <input type="text" id="username" name="username"
+                value="<?php echo htmlspecialchars($username ?? ''); ?>"
                 class="<?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" required>
-            <?php 
+            <?php
             if(!empty($username_err)){
                 echo '<span class="invalid-feedback">' . htmlspecialchars($username_err) . '</span>';
             }
             ?>
 
             <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" 
+            <input type="password" id="password" name="password"
                 class="<?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" required>
-            <?php 
+            <?php
             if(!empty($password_err)){
                 echo '<span class="invalid-feedback">' . htmlspecialchars($password_err) . '</span>';
             }
             ?>
             
             <label for="confirm_password">Confirmer le mot de passe :</label>
-            <input type="password" id="confirm_password" name="confirm_password" 
+            <input type="password" id="confirm_password" name="confirm_password"
                 class="<?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" required>
-            <?php 
+            <?php
             if(!empty($confirm_password_err)){
                 echo '<span class="invalid-feedback">' . htmlspecialchars($confirm_password_err) . '</span>';
             }
