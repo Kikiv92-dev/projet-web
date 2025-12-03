@@ -107,32 +107,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
  </div>
 
  <main class="content-interior">
-    <h1>S'inscrire</h1>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="login-form">
-        
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="username" 
-            value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>"
-            class="<?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" required>
-        <?php 
-        if(!empty($username_err)){
-            echo '<span class="invalid-feedback">' . $username_err . '</span>';
-        }
-        ?>
-
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" 
-            class="<?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" required>
-        <?php 
-        if(!empty($password_err)){
-            echo '<span class="invalid-feedback">' . $password_err . '</span>';
-        }
-        ?>
-
-        <button type="submit">S'inscrire</button>
-        <a href="login.php" class="register-link">Se connecter</a>
-    </form>
-</main>
+<h1>S'inscrire</h1>
+         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="login-form">
+            
+         <label for="username">Nom d'utilisateur :</label>
+                     <input type="text" id="username" name="username" 
+                   echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
+                   class="<?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" required>
+            <?php 
+            if(!empty($username_err)){
+                echo '<span class="invalid-feedback">' . $username_err . '</span>';
+            }
+            ?>
+ 
+         <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password" 
+                   class="<?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" required>
+            <?php 
+            if(!empty($password_err)){
+                echo '<span class="invalid-feedback">' . $password_err . '</span>';
+            }
+            ?>
+ 
+         <button type="submit">S'inscrire</button>
+            <a href="login.php" class="register-link">Se connecter</a>
+        </form>
+ </main>
 
  <script src="js1.js"></script>
 
