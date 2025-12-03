@@ -236,3 +236,95 @@ body {
     /* Apply the animation */
     animation: scan-sweep 5s linear infinite; /* 5-second duration, constant speed, loops forever */
 }
+
+/* --- NOUVEAUX STYLES POUR LE TABLEAU DE BORD ÉVÉNEMENTS (Zone inférieure) --- */
+
+/* 1. GRILLE PRINCIPALE DU TABLEAU DE BORD (Conteneur du tableau et de la carte) */
+.dashboard-grid {
+    display: grid;
+    /* 70% pour le tableau des inscriptions, 30% pour la carte de l'événement */
+    grid-template-columns: 3fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+    text-align: left; /* Aligner le contenu à gauche dans ces zones */
+    padding-top: 20px;
+}
+
+/* 2. STYLE DES TITRES DE SECTION */
+.dashboard-grid h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #00ff00;
+    margin-bottom: 15px;
+    /* Simuler une sortie de console */
+    border-left: 3px solid #00ff00;
+    padding-left: 10px;
+}
+
+/* 3. TABLEAU DES INSCRIPTIONS RÉCENTES */
+.hacker-table {
+    width: 100%;
+    border-collapse: collapse; 
+    font-family: 'Consolas', 'Courier New', monospace; /* Police plus technique */
+    font-size: 0.9em;
+}
+
+.hacker-table th,
+.hacker-table td {
+    padding: 10px 15px;
+    border: 1px solid rgba(0, 255, 0, 0.2); /* Bordure très subtile */
+    color: #00ff00;
+    box-shadow: inset 0 1px 0 rgba(0, 255, 0, 0.05); 
+}
+
+/* En-têtes du tableau */
+.hacker-table th {
+    background-color: rgba(0, 255, 0, 0.1); 
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #33ff33; 
+    border-bottom: 2px solid #00ff00;
+}
+
+/* Lignes alternées pour la lisibilité */
+.hacker-table tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1); 
+}
+
+.hacker-table tbody tr:hover {
+    background-color: rgba(0, 255, 0, 0.05); 
+}
+
+/* 4. CARTE DU PROCHAIN ÉVÉNEMENT (Bloc de droite) */
+.event-countdown {
+    background-color: transparent;
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid #33ff33;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); /* Effet Glow */
+    text-align: center;
+}
+
+.event-countdown h3 {
+    font-size: 1.4em;
+    color: #ffcc00; /* Jaune fluo pour un contraste "Alerte" */
+    text-shadow: 0 0 5px #ffcc00;
+    border-left: none; 
+    padding-left: 0;
+    margin-top: 0; /* Important pour l'alignement */
+}
+
+.event-countdown p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.countdown-timer {
+    font-size: 2.5em !important; 
+    font-weight: bolder;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00; 
+    letter-spacing: 2px;
+}

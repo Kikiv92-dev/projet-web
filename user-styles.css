@@ -1,6 +1,6 @@
 /* ADMIN-SPECIFIC STYLING */
 body {
-    background-color: #121212; /* Black background */
+    background-color: transparent; /* Changed to transparent for canvas */
     font-family: Arial, sans-serif;
     color: #00ff00;
     text-align: center;
@@ -138,14 +138,9 @@ body {
 }
 
 /* Ensure your main content wrapper has a background color to block the canvas */
-/* We'll make it semi-transparent so the rain still shows through */
 #content-wrapper {
     /* To see the canvas, we must remove the body background color */
     background-color: transparent; 
-    /* Or use a semi-transparent black for a subtle effect */
-    /* background-color: rgba(0, 0, 0, 0.5); */ 
-    
-    /* Ensure the wrapper covers the screen */
     min-height: 100vh; 
 }
 
@@ -238,3 +233,83 @@ body {
     animation: scan-sweep 5s linear infinite; /* 5-second duration, constant speed, loops forever */
 }
 
+/* ============================================== */
+/* NOUVEAUX STYLES POUR LE TABLEAU D'INSCRIPTIONS MEMBRE */
+/* ============================================== */
+
+/* Grid container for main views (to hold the table/other blocks) */
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allows blocks to wrap on smaller screens */
+    gap: 30px;
+    margin-top: 30px;
+    justify-content: space-between;
+    width: 100%; /* Ensure it spans the full width of the main view */
+}
+
+/* Container for the table */
+.recent-inscriptions {
+    flex-grow: 1;
+    min-width: 300px; /* Ensures a minimum size */
+    border: 1px solid #00ff00;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.recent-inscriptions h3 {
+    color: #00ff00;
+    margin-top: 0;
+    font-size: 1.2em;
+    border-bottom: 1px dashed #00ff00;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Table Styling (Hacker/Matrix Style) */
+.hacker-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    table-layout: fixed; /* Ensures columns respect widths */
+}
+
+.hacker-table thead tr {
+    background-color: rgba(0, 255, 0, 0.1); /* Light green tint for header */
+}
+
+.hacker-table th, .hacker-table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.hacker-table th {
+    color: #00ff00;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Style for the rows */
+.hacker-table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.hacker-table tbody tr:hover {
+    background-color: rgba(0, 255, 0, 0.05); /* Very slight highlight on hover */
+}
+
+/* Specific column styles (if needed) */
+.hacker-table .col-event {
+    font-weight: bold;
+}
+
+/* Style for the "No data" row */
+.hacker-table tbody tr td[colspan] {
+    opacity: 0.6;
+    font-style: italic;
+    padding: 20px;
+}

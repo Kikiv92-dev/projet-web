@@ -49,7 +49,7 @@ require_once "connexion.php"
         }        
         ?>
 
-        <form action="connexion.php" method="POST" class="login-form">
+        <form action="login.php" method="POST" class="login-form">
             
             <label for="username">Nom d'utilisateur :</label>
             <input type="text" id="username" name="username" 
