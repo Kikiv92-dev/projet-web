@@ -20,9 +20,9 @@ $user_username = htmlspecialchars($_SESSION["username"]);
 // ==============================================
 // 1. CONFIGURATION ET CONNEXION BDD (À MODIFIER)
 // ==============================================
-$db_host = 'localhost';      
-$db_name = 'guardia_bde';    
-$db_user = 'root';           
+$db_host = 'localhost';
+$db_name = 'guardia_bde';
+$db_user = 'root';
 $db_pass = ''; // <--- MODIFIER ICI
 
 $pdo = null; 
