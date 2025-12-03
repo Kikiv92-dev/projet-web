@@ -25,7 +25,7 @@ $db_name = 'guardia_bde';
 $db_user = 'root';
 $db_pass = ''; // <--- MODIFIER ICI
 
-$pdo = null; 
+$pdo = null;
 
 try {
     $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
