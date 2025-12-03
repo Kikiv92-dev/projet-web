@@ -23,7 +23,7 @@ $user_username = htmlspecialchars($_SESSION["username"]);
 $db_host = 'localhost';
 $db_name = 'guardia_bde';
 $db_user = 'root';
-$db_pass = getenv('DB_PASSWORD');
+$db_pass = 'zb6[)M8s/u]*FqQA';
 
 $pdo = null;
 

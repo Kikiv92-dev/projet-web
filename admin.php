@@ -11,7 +11,7 @@ $admin_username = htmlspecialchars($_SESSION["username"]);
 $db_host = 'localhost';      // Généralement 'localhost'
 $db_name = 'guardia_bde';    // Nom de votre base de données
 $db_user = 'root';           // Votre nom d'utilisateur MySQL
-$db_pass = getenv('DB_PASSWORD');
+$db_pass = 'zb6[)M8s/u]*FqQA';
 
 $pdo = null; // Initialisation de la variable de connexion
 
