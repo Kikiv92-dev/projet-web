@@ -96,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
  <li><a href="bde.html" class="nav-link">./BDE</a></li>
  <li><a href="evenement.html" class="nav-link">./evenement</a></li>
  <li><a href="contact.html" class="nav-link">./contact</a></li>
- <li><a href="login.html" class="nav-link">./login</a></li>
+ <li><a href="login.php" class="nav-link">./login</a></li>
  </ul>
  </nav>
  </header>

@@ -2,7 +2,7 @@
 // Paramètres de connexion à la base de données
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root'); // Par défaut avec XAMPP
-define('DB_PASSWORD', '');     // Par défaut avec XAMPP
+define('DB_PASSWORD', 'zb6[)M8s/u]*FqQA');     // Par défaut avec XAMPP
 define('DB_NAME', 'guardia_bde');
 
 /* Tentative de connexion à la base de données MySQL */
