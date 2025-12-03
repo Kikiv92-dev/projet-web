@@ -11,7 +11,7 @@ $db_user = 'root';
 $db_pass = 'zb6[)M8s/u]*FqQA';
 
 /* Tentative de connexion à la base de données MySQL */
-$conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+$conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
 // Vérifier la connexion
 if($conn === false){
