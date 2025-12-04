@@ -1,8 +1,6 @@
 <?php
-// Démarrage de la session PHP pour utiliser $_SESSION
-session_start();
- 
-// Initialisation des variables d'erreur et des valeurs du formulaire
+
+
 $username = $password = "";
 $username_err = $password_err = $login_err = "";
 

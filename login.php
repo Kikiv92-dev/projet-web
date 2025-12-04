@@ -1,8 +1,77 @@
 <?php
 
-require_once "connexion.php"
+session_start();
+// Vérifier si l'utilisateur est déjà connecté
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    // Rediriger si déjà connecté
+    if ($_SESSION["role"] == "administrateur") {
+        header("location: admin.php");
+    } else {
+        header("location: accueilmembre.php");
+    }
+    exit;
+}
+
+require_once "config.php"; // Pour charger $pdo
+require_once "connexion.php"; // Votre fichier de connexion à la base
+
+$username = $password = $login_err = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // Récupération et nettoyage des entrées
+    $username = trim($_POST["username"]);
+    $password = $_POST["password"];
+
+    // 1. Requête préparée pour récupérer l'utilisateur
+    $sql = "SELECT id, username, password_hash, role FROM users WHERE username = :username"; 
+    
+    if ($stmt = $pdo->prepare($sql)) {
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            if ($stmt->rowCount() == 1) {
+                
+                // Un utilisateur trouvé
+                if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $hashed_password = $row['password_hash'];
+                    
+                    // 2. Vérification du mot de passe
+                    // Utilisez password_verify() pour une vérification sécurisée du HASH
+                    if (password_verify($password, $hashed_password)) {
+                        
+                        // Mot de passe correct, Démarrer/Mettre à jour la session
+                        $_SESSION["loggedin"] = true;
+                        $_SESSION["id"] = $row["id"];
+                        $_SESSION["username"] = $row["username"];
+                        $_SESSION["role"] = $row["role"]; 
+                        
+                        // Redirection en fonction du rôle
+                        if ($_SESSION["role"] == "administrateur") {
+                            header("location: admin.php");
+                        } else {
+                            header("location: accueilmembre.php");
+                        }
+                        exit;
+
+                    } else {
+                        $login_err = "Nom d'utilisateur ou mot de passe invalide.";
+                    }
+                }
+            } else {
+                $login_err = "Nom d'utilisateur ou mot de passe invalide.";
+            }
+        } else {
+            $login_err = "Oups! Quelque chose a mal tourné. Veuillez réessayer plus tard.";
+        }
+        unset($stmt);
+    }
+    // Fermer la connexion PDO (si elle n'est pas réutilisée)
+    unset($pdo);
+}
 
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

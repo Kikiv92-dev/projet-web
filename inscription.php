@@ -57,15 +57,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
-    // =================================================================
-    // B. VALIDATION DU MOT DE PASSE ET CONFIRMATION
+   // =================================================================
+    // B. VALIDATION DU MOT DE PASSE ET CONFIRMATION (Amélioration de la force)
     // =================================================================
     if(empty(trim($_POST["password"]))){
         $password_err = "Veuillez entrer un mot de passe.";
-    } elseif(strlen(trim($_POST["password"])) < 6){
-        $password_err = "Le mot de passe doit contenir au moins 6 caractères.";
     } else{
-        $password = trim($_POST["password"]);
+        $input_password = trim($_POST["password"]);
+        
+        // --- 1. Règle de Longueur ---
+        if(strlen($input_password) < 10){
+            $password_err = "Le mot de passe doit contenir au moins 10 caractères.";
+        // --- 2. Règle de Complexité (Majuscule, Minuscule, Chiffre, Caractère Spécial) ---
+        } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/', $input_password)) {
+            $password_err = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.";
+        } else {
+            $password = $input_password;
+        }
     }
 
     // Validation de la confirmation
@@ -73,6 +81,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $confirm_password_err = "Veuillez confirmer le mot de passe.";
     } else{
         $confirm_password = trim($_POST["confirm_password"]);
+        // Attention : Ne vérifier la correspondance que si aucune erreur de force n'a été détectée
         if(empty($password_err) && ($password != $confirm_password)){
             $confirm_password_err = "Les mots de passe ne correspondent pas.";
         }
@@ -176,9 +185,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
             <button type="submit">S'inscrire</button>
             <a href="login.php" class="register-link">Se connecter</a>
+            
         </form>
     </main>
-
+    
     <script src="js1.js"></script>
 
 </body>

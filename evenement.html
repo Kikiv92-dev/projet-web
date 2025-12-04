@@ -44,6 +44,7 @@
                         <p class="event-info">Date : 5 Décembre</p>
                         <p class="event-info available-seats">Places disponibles : 35/50</p>
                         <p class="event-description">Une soirée chaleureuse entre étudiants autour d’une raclette géante, jeux et ambiance festive pour célébrer la fin d’année.</p>
+                        <button class="location-button" data-location="22 Terr. Bellini, 92800 Puteaux" data-event-title="Raclette Party">Lieu 📍</button> 
                         <a href="page dacceil raglette.html" class="event-button" data-template-id="raclette-template">S'inscrire</a> </div>
                 </div>
                 
@@ -56,6 +57,7 @@
                         <p class="event-info">Date : 15 Décembre</p>
                         <p class="event-info available-seats">Places disponibles : 8/100</p>
                         <p class="event-description">Un événement spécial Noël rempli d’animations, de surprises et d’une ambiance festive pour clôturer l’année.</p>
+                        <button class="location-button" data-location="1 Parv. de la Défense, 92800 Paris La Défense" data-event-title="BDE Santa Secret">Lieu 📍</button>
                         <a href="noel page dacceuil.html" class="event-button" data-template-id="noel-template">S'inscrire</a> </div>
                 </div>
 
@@ -80,88 +82,99 @@
                         <p class="event-info">Date : 15 Janvierr</p>
                         <p class="event-info available-seats">Places disponibles : 12/15</p>
                         <p class="event-description">Partagez un moment convivial autour de la galette et découvrez une ambiance chaleureuse pour bien commencer l’année.</p>
+                        <button class="location-button" data-location="22 Terr. Bellini, 92800 Puteaux" data-event-title="Fête de la galette des rois">Lieu 📍</button>
                         <a href="galete des rois page.html" class="event-button" data-template-id="galette-template">S'inscrire</a> </div>
                 </div>
 
-        </div>
-    </main>
+            </div>
+        </main>
 
-    <template id="raclette-template">
-        <div class="raglette-wrapper">
-            <div class="registration-container">
-                <h1><span class="raclette-icon">🧀</span> Inscription Soirée Raclette <span class="raclette-icon">🍷</span></h1>
-                <p>Préparez-vous pour le fromage fondu, les pommes de terre et la bonne humeur !</p>
-                <form action="inscription_event.php" method="POST" class="registration-form">
-                    <input type="hidden" name="evenement" value="Raclette Party">
+        <template id="raclette-template">
+            <div class="raglette-wrapper">
+                <div class="registration-container">
+                    <h1><span class="raclette-icon">🧀</span> Inscription Soirée Raclette <span class="raclette-icon">🍷</span></h1>
+                    <p>Préparez-vous pour le fromage fondu, les pommes de terre et la bonne humeur !</p>
+                    <form action="inscription_event.php" method="POST" class="registration-form">
+                        <input type="hidden" name="evenement" value="Raclette Party">
+                        <div class="form-group">
+                            <label for="nom-rac">Nom :</label> <span class="input-icon" style="color: #FFD700;">🧀</span>
+                            <input type="text" id="nom-rac" name="nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prenom-rac">Prénom :</label> <span class="input-icon" style="color: #D2B48C;">🥔</span>
+                            <input type="text" id="prenom-rac" name="prenom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="numero-rac">Numéro de téléphone :</label> <span class="input-icon" style="color: #8B0000;">🍷</span>
+                            <input type="tel" id="numero-rac" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Je fonce pour le fromage ! <span class="btn-icon">🔥</span></button>
+                    </form>
+                </div>
+            </div>
+        </template>
+        
+        <template id="galette-template">
+            <div class="galette-wrapper">
+                <div class="registration-container galette-form-container">
+                    <h1>👑 Inscription Fête de la Galette des Rois</h1>
+                    <p>Veuillez remplir les informations pour valider votre participation au tirage de la fève !</p>
+                    <form action="inscription_event.php" method="POST" class="registration-form">
+                        <input type="hidden" name="evenement" value="Fête de la galette des rois">
+                        <div class="form-group">
+                            <label for="nom-gal">Nom :</label>
+                            <input type="text" id="nom-gal" name="nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prenom-gal">Prénom :</label>
+                            <input type="text" id="prenom-gal" name="prenom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="numero-gal">Numéro de téléphone :</label>
+                            <input type="tel" id="numero-gal" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                        </div>
+                        <button type="submit" class="submit-btn galette-submit-btn">Je m'inscris !</button>
+                    </form>
+                </div>
+            </div>
+        </template>
+        
+        <template id="noel-template">
+        <div class="noel-wrapper">
+            <div class="registration-container noel-form-container">
+                <h1><span class="noel-icon">🌟</span> Inscription Soirée de Noël</h1>
+                <p>Réservez votre place pour une soirée magique d'échange de cadeaux et de bonne humeur !</p>
+                <form action="inscription_event.php" method="POST" class="registration-form">
+                    <input type="hidden" name="evenement" value="Soirée de Noël">
                     <div class="form-group">
-                        <label for="nom-rac">Nom :</label> <span class="input-icon" style="color: #FFD700;">🧀</span>
-                        <input type="text" id="nom-rac" name="nom" required>
+                        <label for="nom-noel">Nom :</label>
+                        <span class="input-icon">🎁</span> <input type="text" id="nom-noel" name="nom" required>
                     </div>
                     <div class="form-group">
-                        <label for="prenom-rac">Prénom :</label> <span class="input-icon" style="color: #D2B48C;">🥔</span>
-                        <input type="text" id="prenom-rac" name="prenom" required>
+                        <label for="prenom-noel">Prénom :</label>
+                        <span class="input-icon">🎄</span> <input type="text" id="prenom-noel" name="prenom" required>
                     </div>
                     <div class="form-group">
-                        <label for="numero-rac">Numéro de téléphone :</label> <span class="input-icon" style="color: #8B0000;">🍷</span>
-                        <input type="tel" id="numero-rac" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Je fonce pour le fromage ! <span class="btn-icon">🔥</span></button>
+                        <label for="numero-noel">Numéro de téléphone :</label>
+                        <span class="input-icon">🔔</span> <input type="tel" id="numero-noel" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
+                    </div>
+                    <button type="submit" class="submit-btn noel-submit-btn">
+                        Joyeuse Inscription <span class="btn-icon">🎅</span>
+                    </button>
                 </form>
             </div>
         </div>
-    </template>
-    
-    <template id="galette-template">
-        <div class="galette-wrapper">
-            <div class="registration-container galette-form-container">
-                <h1>👑 Inscription Fête de la Galette des Rois</h1>
-                <p>Veuillez remplir les informations pour valider votre participation au tirage de la fève !</p>
-                <form action="inscription_event.php" method="POST" class="registration-form">
-                    <input type="hidden" name="evenement" value="Fête de la galette des rois">
-                    <div class="form-group">
-                        <label for="nom-gal">Nom :</label>
-                        <input type="text" id="nom-gal" name="nom" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="prenom-gal">Prénom :</label>
-                        <input type="text" id="prenom-gal" name="prenom" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="numero-gal">Numéro de téléphone :</label>
-                        <input type="tel" id="numero-gal" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
-                    </div>
-                    <button type="submit" class="submit-btn galette-submit-btn">Je m'inscris !</button>
-                </form>
+        </template>
+        
+        <template id="map-modal-template">
+            <div class="map-wrapper">
+                <h2 class="map-title">Lieu de l'événement : <span id="event-map-title"></span></h2>
+                <div id="map-container">
+                    <iframe id="google-map-iframe" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+                <p class="map-address-display">Adresse : <strong id="map-address-text"></strong></p>
             </div>
-        </div>
-    </template>
-    
-    <template id="noel-template">
-    <div class="noel-wrapper">
-        <div class="registration-container noel-form-container">
-            <h1><span class="noel-icon">🌟</span> Inscription Soirée de Noël</h1>
-            <p>Réservez votre place pour une soirée magique d'échange de cadeaux et de bonne humeur !</p>
-            <form action="inscription_event.php" method="POST" class="registration-form">
-                <input type="hidden" name="evenement" value="Soirée de Noël">
-                <div class="form-group">
-                    <label for="nom-noel">Nom :</label>
-                    <span class="input-icon">🎁</span> <input type="text" id="nom-noel" name="nom" required>
-                </div>
-                <div class="form-group">
-                    <label for="prenom-noel">Prénom :</label>
-                    <span class="input-icon">🎄</span> <input type="text" id="prenom-noel" name="prenom" required>
-                </div>
-                <div class="form-group">
-                    <label for="numero-noel">Numéro de téléphone :</label>
-                    <span class="input-icon">🔔</span> <input type="tel" id="numero-noel" name="telephone" pattern="[0-9]{10}" placeholder="Ex: 0612345678" required>
-                </div>
-                <button type="submit" class="submit-btn noel-submit-btn">
-                    Joyeuse Inscription <span class="btn-icon">🎅</span>
-                </button>
-            </form>
-        </div>
-    </div>
-</template>
+        </template>
 
     <div id="modal" class="modal hidden" aria-hidden="true">
         <div class="modal-overlay"></div>
@@ -170,33 +183,71 @@
             <div class="modal-body"></div>
         </div>
     </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('modal');
             const modalBody = modal.querySelector('.modal-body');
             const closeBtn = modal.querySelector('.modal-close');
             
-            // Sélectionne tous les boutons qui ouvrent une modale (Raclette ou Galette)
-            const modalButtons = document.querySelectorAll('a.event-button[data-template-id]');
+            // Sélectionne tous les boutons qui ouvrent une modale (S'inscrire)
+            const registerButtons = document.querySelectorAll('a.event-button[data-template-id]');
+            // Sélectionne tous les nouveaux boutons qui ouvrent la carte (Lieu 📍)
+            const locationButtons = document.querySelectorAll('.location-button');
 
-            modalButtons.forEach(btn => {
+            // Fonction pour afficher la modale
+            const showModal = (contentHTML) => {
+                modalBody.innerHTML = contentHTML;
+                modal.classList.remove('hidden');
+                modal.setAttribute('aria-hidden', 'false');
+            };
+
+            // Gestionnaire pour les boutons "S'inscrire"
+            registerButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    // Récupère l'ID du template à utiliser (raclette-template ou galette-template)
+                    // Récupère l'ID du template à utiliser
                     const templateId = btn.getAttribute('data-template-id');
                     const template = document.getElementById(templateId);
 
-                    if (!template) return;
-
-                    // Injecte le contenu du template
-                    modalBody.innerHTML = template.innerHTML;
-                    
-                    // Affiche la modale
-                    modal.classList.remove('hidden');
-                    modal.setAttribute('aria-hidden', 'false');
+                    if (template) {
+                        showModal(template.innerHTML);
+                    }
                 });
             });
+            
+            // Gestionnaire pour les boutons "Lieu 📍"
+            locationButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const address = btn.getAttribute('data-location');
+                    const eventTitle = btn.getAttribute('data-event-title');
+                    
+                    // Récupère le template de la carte
+                    const mapTemplate = document.getElementById('map-modal-template');
+                    
+                    if (mapTemplate && address) {
+                        // Injecte le contenu du template de la carte
+                        showModal(mapTemplate.innerHTML);
+                        
+                        // Construit l'URL pour l'API Google Maps Embed (utilisation d'une adresse pour la recherche)
+                        const encodedAddress = encodeURIComponent(address);
+                        // REMPLACEZ 'VOTRE_CLE_API_GOOGLE_MAPS_ICI' par votre clé API Google Maps !
+                        const mapUrl = `https://www.google.com/maps/embed/v1/place?q=${encodedAddress}&key=AIzaSyBUF-nMqx2r19iHmnzkbeaR1nWopM-atms`;
+                        
+                        // Met à jour l'iframe, le titre et l'adresse
+                        const mapIframe = document.getElementById('google-map-iframe');
+                        const mapTitle = document.getElementById('event-map-title');
+                        const mapAddressText = document.getElementById('map-address-text');
+
+                        if (mapIframe) mapIframe.src = mapUrl;
+                        if (mapTitle) mapTitle.textContent = eventTitle;
+                        if (mapAddressText) mapAddressText.textContent = address;
+
+                    }
+                });
+            });
+
 
             // Gestionnaires de fermeture (inchangés)
             closeBtn.addEventListener('click', () => { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); });
@@ -205,7 +256,6 @@
             
         });
     </script>
-
     <script src="js1.js"></script>
 
 </body>
