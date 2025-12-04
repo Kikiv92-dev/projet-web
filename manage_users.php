@@ -2,9 +2,8 @@
 // Démarrage de la session et vérification des droits (essentiel)
 session_start();
 
-// Si l'utilisateur n'est pas connecté ou n'est pas admin, on le redirige
-// (Vous devez adapter cette vérification à votre propre logique de connexion)
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+// VÉRIFICATION DE SÉCURITÉ CRITIQUE : Seul l'administrateur peut accéder à cette page
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["role"]) || $_SESSION["role"] !== "administrateur") {
     header("location: login.php");
     exit;
 }

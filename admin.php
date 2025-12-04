@@ -1,7 +1,13 @@
 <?php
-// ... VOTRE CODE EXISTANT (session_start(), vérification d'accès, etc.) ...
 session_start();
-// ...
+
+// VÉRIFICATION DE SÉCURITÉ CRITIQUE : Seul l'administrateur peut accéder à cette page
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !isset($_SESSION["role"]) || $_SESSION["role"] !== "administrateur") {
+    // Redirection si non connecté ou non admin
+    header("location: login.php");
+    exit;
+}
+
 $admin_username = htmlspecialchars($_SESSION["username"]);
 
 require_once "config.php";

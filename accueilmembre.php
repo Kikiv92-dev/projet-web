@@ -39,16 +39,17 @@ if (!$user_prenom && !$user_nom) {
     $user_nom = $user_username;
 }
 
+$user_id = $_SESSION["id"]; // Récupérer l'ID de l'utilisateur connecté
 
 // --- a) Événements Futurs Inscrits ---
 $evenements_futurs = [];
 $sql_futurs = "SELECT evenement, date_inscription
                FROM inscriptions_evenements
-               WHERE prenom = :prenom AND nom = :nom
+               WHERE user_id = :user_id  /* FILTRE SÉCURISÉ PAR ID */
                ORDER BY evenement ASC";
                
 $stmt_futurs = $pdo->prepare($sql_futurs);
-$stmt_futurs->execute([':prenom' => $user_prenom, ':nom' => $user_nom]);
+$stmt_futurs->execute([':user_id' => $user_id]); // Exécuter avec l'ID
 $evenements_futurs = $stmt_futurs->fetchAll(PDO::FETCH_ASSOC);
 
 $total_evenements_futurs = count($evenements_futurs);

@@ -45,7 +45,8 @@ require_once "connexion.php"
         
         <?php 
         if(!empty($login_err)){
-            echo '<div class="alert error-message">' . $login_err . '</div>';
+            // AJOUT DE htmlspecialchars() pour prévenir le XSS
+            echo '<div class="alert error-message">' . htmlspecialchars($login_err) . '</div>';
         }        
         ?>
 
