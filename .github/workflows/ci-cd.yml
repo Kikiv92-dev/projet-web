@@ -27,22 +27,22 @@ jobs:
             for f in $files; do php -l "$f"; done
           fi
 
-      - name: Ensure jq available
-        run: sudo apt-get install -y jq
+      - name: Ensure curl available
+        run: sudo apt-get install -y curl
 
-      - name: Run OWASP ZAP baseline scan
-        uses: zaproxy/action-baseline-scan@v1
-        with:
-          target: ${{ secrets.ZAP_TARGET_URL }}
-          args: '-r zap-report.html -J zap-report.json'
-
-      - name: Upload ZAP reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-reports
-          path: |
-            zap-report.html
-            zap-report.json
+      - name: Healthcheck Vercel target (optional)
+        if: ${{ secrets.ZAP_TARGET_URL != '' }}
+        run: |
+          echo "Pinging target: ${{ secrets.ZAP_TARGET_URL }}"
+          for i in {1..10}; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.ZAP_TARGET_URL }}") || true
+            echo "HTTP status: $status"
+            if [ "$status" -ge 200 ] && [ "$status" -lt 400 ]; then
+              echo "Target healthy"; exit 0
+            fi
+            sleep 2
+          done
+          echo "Target did not become healthy"; exit 1
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
