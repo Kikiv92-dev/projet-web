@@ -1,0 +1,47 @@
+name: OWASP ZAP Baseline Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  zap-baseline:
+    name: ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Docker network
+        run: |
+          docker network create zapnet || true
+
+      - name: Start PHP Apache container
+        run: |
+          docker run -d --name web --network zapnet -p 8080:80 -v ${{ github.workspace }}:/var/www/html:ro php:8.1-apache
+
+      - name: Wait for web service
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:8080 >/dev/null; then echo "web up"; exit 0; fi
+            sleep 1
+          done
+          echo "Service did not become ready" && exit 1
+
+      - name: Run OWASP ZAP baseline scan
+        run: |
+          docker run --rm --network zapnet -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://web:80 -r zap-report.html
+
+      - name: Upload ZAP report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: zap-report.html
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f web || true
+          docker network rm zapnet || true
