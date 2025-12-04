@@ -44,6 +44,62 @@ jobs:
           done
           echo "Target did not become healthy"; exit 1
 
+      - name: Run SonarCloud analysis (optional)
+        if: ${{ secrets.SONAR_TOKEN != '' && secrets.SONAR_PROJECT_KEY != '' && secrets.SONAR_ORGANIZATION != '' }}
+        uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args:
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+          projectBaseDir: .
+
+      - name: OWASP ZAP baseline scan (optional)
+        if: ${{ secrets.ZAP_TARGET_URL != '' }}
+        env:
+          ZAP_TARGET: ${{ secrets.ZAP_TARGET_URL }}
+          FAIL_ON_ZAP_HIGH: ${{ secrets.FAIL_ON_ZAP_HIGH || 'true' }}
+        run: |
+          set -euo pipefail
+          echo "Preparing to run OWASP ZAP against $ZAP_TARGET"
+          # Optional Docker Hub login to avoid pull access denied
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME || '' }}" ] && [ -n "${{ secrets.DOCKERHUB_PASSWORD || '' }}" ]; then
+            echo "Logging into Docker Hub"
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          else
+            echo "No Docker Hub credentials provided; attempting unauthenticated pull"
+          fi
+
+          IMG=docker.io/owasp/zap2docker-stable
+          echo "Pulling $IMG (retries)"
+          for i in 1 2 3 4 5; do
+            if docker pull "$IMG"; then
+              break
+            else
+              echo "Pull attempt $i failed; retrying in 5s..."
+              sleep 5
+            fi
+            if [ $i -eq 5 ]; then echo "Failed to pull $IMG after retries"; exit 1; fi
+          done
+
+          # Run baseline scan and write reports into workspace
+          docker run --rm -v "$PWD":/zap/wrk/:rw --network host "$IMG" zap-baseline.py -t "$ZAP_TARGET" -r zap-report.html -J zap-report.json || true
+
+          # Upload artifacts
+          if [ -f zap-report.html ]; then echo "Found zap-report.html"; else echo "No HTML report generated"; fi
+          if [ -f zap-report.json ]; then
+            echo "Parsing JSON report"
+            cat zap-report.json | jq '.site[0].alerts | length' || true
+            HCOUNT=$(jq '[.site[0].alerts[]? | select(.risk == "High")] | length' zap-report.json)
+            echo "High alerts: $HCOUNT"
+            if [ "$FAIL_ON_ZAP_HIGH" = "true" ] && [ "$HCOUNT" -gt 0 ]; then
+              echo "Failing because High alerts > 0"; exit 1
+            fi
+          else
+            echo "zap-report.json not found; continuing"
+          fi
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
         with:
