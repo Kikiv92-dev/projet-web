@@ -1,0 +1,52 @@
+name: CI/CD — Lint, Security Scan, Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PHP CLI
+        run: sudo apt-get update && sudo apt-get install -y php-cli
+
+      - name: PHP lint
+        run: |
+          set -e
+          files=$(git ls-files '*.php')
+          if [ -z "$files" ]; then
+            echo "No PHP files to lint"
+          else
+            echo "Running php -l on PHP files"
+            for f in $files; do php -l "$f"; done
+          fi
+
+      - name: Ensure jq available
+        run: sudo apt-get install -y jq
+
+      - name: Run OWASP ZAP baseline scan
+        uses: zaproxy/action-baseline-scan@v1
+        with:
+          target: ${{ secrets.ZAP_TARGET_URL }}
+          args: '-r zap-report.html -J zap-report.json'
+
+      - name: Upload ZAP reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            zap-report.html
+            zap-report.json
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          working-directory: '.'

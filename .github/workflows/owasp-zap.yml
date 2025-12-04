@@ -1,4 +1,4 @@
-name: OWASP ZAP Baseline Scan
+name: OWASP ZAP Baseline Scan (targeted)
 
 on:
   push:
@@ -10,61 +10,54 @@ jobs:
   zap-baseline:
     name: ZAP Baseline Scan
     runs-on: ubuntu-latest
+    env:
+      # Set this secret to your Vercel-deployed site, e.g. https://my-app.vercel.app
+      ZAP_TARGET: ${{ secrets.ZAP_TARGET_URL }}
+      # Controls failure behavior
+      FAIL_ON_HIGH: 'true'
+      FAIL_ON_MEDIUM: 'false'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create Docker network
+      - name: Ensure jq available
         run: |
-          docker network create zapnet || true
+          sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Docker Hub login (optional)
+      - name: Validate target is set
         run: |
-          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
-            echo "Logging in to Docker Hub"
-            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          else
-            echo "No Docker Hub credentials configured; proceeding unauthenticated"
+          if [ -z "${ZAP_TARGET}" ]; then
+            echo "ERROR: ZAP_TARGET is not set. Add secret ZAP_TARGET_URL with your Vercel URL."; exit 1
           fi
 
-      - name: Pull required Docker images with retries
-        run: |
-          set -e
-          IMAGES=(docker.io/library/php:8.1-apache docker.io/owasp/zap2docker-stable)
-          for img in "${IMAGES[@]}"; do
-            echo "Pulling $img"
-            for i in {1..5}; do
-              docker pull "$img" && break || {
-                echo "Pull failed (attempt $i). Retrying in 5s..."
-                sleep 5
-              }
-            done
-          done
+      - name: Run OWASP ZAP baseline scan (action)
+        uses: zaproxy/action-baseline-scan@v1
+        with:
+          target: ${{ env.ZAP_TARGET }}
+          args: '-r zap-report.html -J zap-report.json'
 
-      - name: Start PHP Apache container
-        run: |
-          docker run -d --name web --network zapnet -p 8080:80 -v ${{ github.workspace }}:/var/www/html:ro docker.io/library/php:8.1-apache
-
-      - name: Wait for web service
-        run: |
-          for i in {1..30}; do
-            if curl -sSf http://localhost:8080 >/dev/null; then echo "web up"; exit 0; fi
-            sleep 1
-          done
-          echo "Service did not become ready" && exit 1
-
-      - name: Run OWASP ZAP baseline scan
-        run: |
-          docker run --rm --network zapnet -v $(pwd):/zap/wrk/:rw docker.io/owasp/zap2docker-stable zap-baseline.py -t http://web:80 -r zap-report.html
-
-      - name: Upload ZAP report
+      - name: Upload HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: zap-report
+          name: zap-report-html
           path: zap-report.html
 
-      - name: Cleanup
+      - name: Upload JSON report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report-json
+          path: zap-report.json
+
+      - name: Fail on High/Medium alerts (configurable)
         if: always()
         run: |
-          docker rm -f web || true
-          docker network rm zapnet || true
+          if [ ! -f zap-report.json ]; then echo "JSON report missing"; exit 1; fi
+          HCOUNT=$(jq '[.site[0].alerts[]? | select(.risk == "High")] | length' zap-report.json)
+          MCOUNT=$(jq '[.site[0].alerts[]? | select(.risk == "Medium")] | length' zap-report.json)
+          echo "High alerts: $HCOUNT, Medium alerts: $MCOUNT"
+          if [ "${FAIL_ON_HIGH}" = "true" ] && [ "$HCOUNT" -gt 0 ]; then
+            echo "Failing job because High alerts > 0"; exit 1
+          fi
+          if [ "${FAIL_ON_MEDIUM}" = "true" ] && [ "$MCOUNT" -gt 0 ]; then
+            echo "Failing job because Medium alerts > 0"; exit 1
+          fi
