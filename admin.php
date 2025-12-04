@@ -19,6 +19,35 @@ try {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 
+$message_suppression = ""; // Variable pour stocker le message de succès/erreur
+
+// Vérifie si un ID d'inscription a été passé via GET pour la suppression
+if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
+    $id_a_supprimer = $_GET['delete_id'];
+
+    // 1. Requête de suppression
+    // NOTE : On utilise un DELETE simple car nous n'avons pas de colonne is_deleted pour le moment.
+    $sql_delete = "DELETE FROM inscriptions_evenements WHERE id_inscription = :id";
+    
+    try {
+        $stmt_delete = $pdo->prepare($sql_delete);
+        $stmt_delete->bindParam(':id', $id_a_supprimer, PDO::PARAM_INT);
+        $stmt_delete->execute();
+
+        // 2. Vérification du succès
+        if ($stmt_delete->rowCount() > 0) {
+            $message_suppression = "<p class='success-message'>✅ Inscription ID **$id_a_supprimer** supprimée avec succès de la base de données.</p>";
+            // OPTIONNEL : Rediriger pour éviter la re-soumission du formulaire/GET
+            // header("Location: admin.php");
+            // exit();
+        } else {
+            $message_suppression = "<p class='error-message'>⚠️ Erreur : Aucune inscription trouvée avec l'ID **$id_a_supprimer**.</p>";
+        }
+    } catch (PDOException $e) {
+        $message_suppression = "<p class='error-message'>❌ Erreur de base de données lors de la suppression : " . $e->getMessage() . "</p>";
+    }
+}
+
 // ==============================================
 // 2. RÉCUPÉRATION DES DONNÉES DU DASHBOARD
 // ==============================================
@@ -90,6 +119,7 @@ if ($resultat_populaire) {
             <nav>
                 <ul>
                     <li><a href="admin.php" class="active" data-content="dashboard"> ./Dashboard</a></li>
+                    <li><a href="manage_users.php"> ./Gestion Utilisateurs</a></li>
                     <li><a href="deconnexion.php"> ./Déconnexion</a></li>
                 </ul>
             </nav>
@@ -118,28 +148,46 @@ if ($resultat_populaire) {
 <div class="dashboard-grid">
     
     <div class="recent-inscriptions">
-        <h3>>> FLUX D'INSCRIPTIONS </h3>
-        <table class="hacker-table">
-            <thead>
-                </thead>
-            <tbody>
-                <?php foreach ($recent_inscriptions as $inscription): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($inscription['id_inscription']); ?></td>
-                    <td><?php echo htmlspecialchars($inscription['prenom']); ?></td>
-                    <td><?php echo htmlspecialchars($inscription['nom']); ?></td>
-                    <td class="col-event"><?php echo htmlspecialchars($inscription['evenement']); ?></td>
-                    <td><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($inscription['date_inscription']))); ?></td>
-                </tr>
-                <?php endforeach; ?>
-                <?php if (empty($recent_inscriptions)): ?>
-                <tr>
-                    <td colspan="5" style="text-align:center; opacity: 0.7;">[ Aucune inscription trouvée pour le moment. ]</td>
-                </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+    <h3>>> FLUX D'INSCRIPTIONS </h3>
+    
+    <?php echo $message_suppression; ?> 
+
+    <table class="hacker-table">
+        <thead>
+            <tr> <th>ID</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th class="col-event">Événement</th>
+                <th>Date</th>
+                <th>Action</th> </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($recent_inscriptions as $inscription): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($inscription['id_inscription']); ?></td>
+                <td><?php echo htmlspecialchars($inscription['prenom']); ?></td>
+                <td><?php echo htmlspecialchars($inscription['nom']); ?></td>
+                <td class="col-event"><?php echo htmlspecialchars($inscription['evenement']); ?></td>
+                <td><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($inscription['date_inscription']))); ?></td>
+                
+                <td>
+                    <a href="admin.php?delete_id=<?php echo $inscription['id_inscription']; ?>" 
+                       onclick="return confirm('Êtes-vous SÛR de vouloir supprimer l\'inscription de <?php echo addslashes($inscription['prenom'] . ' ' . $inscription['nom']); ?> ? Cette action est irréversible.')" 
+                       class="delete-btn">
+                        [x] Supprimer
+                    </a>
+                </td>
+                
+            </tr>
+            <?php endforeach; ?>
+            <?php if (empty($recent_inscriptions)): ?>
+            <tr>
+                <td colspan="6" style="text-align:center; opacity: 0.7;">[ Aucune inscription trouvée pour le moment. ]</td>
+            </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
     
     </div>
 

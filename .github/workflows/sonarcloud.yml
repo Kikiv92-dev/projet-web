@@ -1,32 +1,8 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+# Ce workflow combine l'Analyse Statique (SAST) via SonarCloud
+# et l'Analyse Dynamique (DAST) via OWASP ZAP Baseline Scan.
+# Le DAST (ZAP) doit toujours s'exécuter APRES que l'application ait été déployée.
 
-# This workflow helps you trigger a SonarCloud analysis of your code and populates
-# GitHub Code Scanning alerts with the vulnerabilities found.
-# Free for open source project.
-
-# 1. Login to SonarCloud.io using your GitHub account
-
-# 2. Import your project on SonarCloud
-#     * Add your GitHub organization first, then add your repository as a new project.
-#     * Please note that many languages are eligible for automatic analysis,
-#       which means that the analysis will start automatically without the need to set up GitHub Actions.
-#     * This behavior can be changed in Administration > Analysis Method.
-#
-# 3. Follow the SonarCloud in-product tutorial
-#     * a. Copy/paste the Project Key and the Organization Key into the args parameter below
-#          (You'll find this information in SonarCloud. Click on "Information" at the bottom left)
-#
-#     * b. Generate a new token and add it to your Github repository's secrets using the name SONAR_TOKEN
-#          (On SonarCloud, click on your avatar on top-right > My account > Security
-#           or go directly to https://sonarcloud.io/account/security/)
-
-# Feel free to take a look at our documentation (https://docs.sonarcloud.io/getting-started/github/)
-# or reach out to our community forum if you need some help (https://community.sonarsource.com/c/help/sc/9)
-
-name: SonarCloud analysis
+name: Combined Security Analysis (SonarCloud + ZAP)
 
 on:
   push:
@@ -36,33 +12,70 @@ on:
   workflow_dispatch:
 
 permissions:
-  pull-requests: read # allows SonarCloud to decorate PRs with analysis results
+  contents: read # Nécessaire pour checkout
+  pull-requests: read # Nécessaire pour SonarCloud pour décorer les PRs
 
 jobs:
   Analysis:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Analyze with SonarCloud
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        # Nécessaire pour une analyse complète par SonarCloud et pour le build/déploiement.
 
-        # You can pin the exact commit or the version.
-        # uses: SonarSource/sonarcloud-github-action@v2.2.0
+      # ==========================================================
+      # 1. ANALYSE STATIQUE (SAST) - SonarCloud
+      # ==========================================================
+      - name: Run SonarCloud Analysis
         uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-        
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
         with:
-          # Additional arguments for the SonarScanner CLI
           args:
-            # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
-            # mandatory
+            # Clés de votre projet SonarCloud (à adapter)
             -Dsonar.projectKey=Kikiv92-dev-projet-web
             -Dsonar.organization=kikiv92-dev
-            # Comma-separated paths to directories containing main source files.
-            #-Dsonar.sources= # optional, default is project base directory
-            # Comma-separated paths to directories containing test source files.
-            #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
-            # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
-            #-Dsonar.verbose= # optional, default is false
-          # When you need the analysis to take place in a directory other than the one from which it was launched, default is .
-          projectBaseDir: .
+            # -Dsonar.sources= (laisser par défaut ou spécifier si besoin)
+            # -Dsonar.tests=
+
+      # ==========================================================
+      # 2. ÉTAPE DE DÉPLOIEMENT (Placeholder)
+      #    !!! L'application doit être déployée ici pour que ZAP puisse la scanner.
+      #    Remplacez cette étape par votre logique de déploiement (Docker, Heroku, etc.).
+      # ==========================================================
+      - name: Deploy Application (Placeholder)
+        run: |
+          echo "Simulating application deployment to test environment..."
+          # Définir l'URL cible de l'application déployée
+          # Cette variable d'environnement DOIT pointer vers votre application en cours d'exécution.
+          echo "ZAP_TARGET_URL=http://localhost:8080" >> $GITHUB_ENV
+          echo "Deployment successful."
+        # Remplacez "http://localhost:8080" par l'URL réelle de votre application de test.
+
+      # ==========================================================
+      # 3. ANALYSE DYNAMIQUE (DAST) - OWASP ZAP Baseline Scan
+      # ==========================================================
+      - name: Run OWASP ZAP Baseline Scan
+        # Utilise l'image Docker de ZAP directement
+        uses: docker://owasp/zap2docker-stable
+        with:
+          args: |
+            zap-baseline.py \
+            -t ${{ env.ZAP_TARGET_URL }} \
+            -r zap_dast_report.html \
+            -l WARN
+        env:
+          # Permet à ZAP de gérer plus facilement les problèmes de connexion/certificats dans les environnements CI
+          # Ne pas utiliser en production !
+          ZAP_API_KEY: 'changeme' 
+
+      # ==========================================================
+      # 4. EXPLOITATION DES RÉSULTATS
+      # ==========================================================
+      - name: Upload ZAP DAST Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP-DAST-Report
+          path: zap_dast_report.html
+          retention-days: 7
