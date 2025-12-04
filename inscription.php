@@ -2,8 +2,6 @@
 // =================================================================
 // 1. GESTION DES ERREURS (CRITIQUE EN PRODUCTION !)
 // =================================================================
-// Désactiver l'affichage des erreurs en production pour ne pas exposer d'informations.
-// Les erreurs seront enregistrées dans les logs du serveur.
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
@@ -11,14 +9,15 @@ error_reporting(E_ALL);
 // 2. INCLURE LA CONFIGURATION DE LA BDD
 require_once "config.php";
 
-$username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
+// AJOUTÉ : Variables pour le champ e-mail
+$username = $email = $password = $confirm_password = "";
+$username_err = $email_err = $password_err = $confirm_password_err = "";
 
 // 3. TRAITEMENT DU FORMULAIRE
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     $table_name = "utilisateurs";
-
+    
     // =================================================================
     // A. VALIDATION DU NOM D'UTILISATEUR (avec Regex pour l'assainissement)
     // =================================================================
@@ -27,15 +26,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $input_username = trim($_POST["username"]);
         
-        // Sécurité : Forcer un schéma alphanumérique pour l'username (empêche les injections)
-        // Accepte lettres, chiffres et underscore (_), entre 3 et 15 caractères.
+        // Sécurité : Forcer un schéma alphanumérique pour l'username
         if (!preg_match('/^[a-zA-Z0-9_]{3,15}$/', $input_username)) {
             $username_err = "Le nom d'utilisateur doit contenir entre 3 et 15 caractères (lettres, chiffres et _).";
         } else {
-            // Vérification de l'existence du nom d'utilisateur dans la base de données
+            // Vérification de l'existence du nom d'utilisateur
             $sql = "SELECT id FROM $table_name WHERE username = ?";
             
-            // Utilisation de l'approche Orientée Objet pour la préparation (plus moderne)
             if($stmt = $conn->prepare($sql)){
                 $stmt->bind_param("s", $param_username);
                 $param_username = $input_username;
@@ -48,8 +45,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $username = $input_username;
                     }
                 } else{
-                    // Sécurité : Enregistrement de l'erreur interne, message générique à l'utilisateur
-                    error_log("Erreur SQL lors de la vérification de l'utilisateur : " . $stmt->error);
+                    error_log("Erreur SQL (vérif username) : " . $stmt->error);
                     $username_err = "Oops! Une erreur interne est survenue. Veuillez réessayer plus tard.";
                 }
                 $stmt->close();
@@ -57,8 +53,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
-   // =================================================================
-    // B. VALIDATION DU MOT DE PASSE ET CONFIRMATION (Amélioration de la force)
+    // =================================================================
+    // NOUVEAU : D. VALIDATION DE L'EMAIL
+    // =================================================================
+    if(empty(trim($_POST["email"]))){
+        $email_err = "Veuillez entrer une adresse e-mail.";
+    } elseif (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
+        $email_err = "Le format de l'adresse e-mail n'est pas valide.";
+    } else {
+        $input_email = trim($_POST["email"]);
+
+        // Vérification de l'existence de l'e-mail dans la base de données
+        $sql = "SELECT id FROM $table_name WHERE email = ?";
+        
+        if($stmt = $conn->prepare($sql)){
+            $stmt->bind_param("s", $param_email);
+            $param_email = $input_email;
+            
+            if($stmt->execute()){
+                $stmt->store_result();
+                if($stmt->num_rows == 1){
+                    $email_err = "Cette adresse e-mail est déjà utilisée.";
+                } else{
+                    $email = $input_email;
+                }
+            } else{
+                error_log("Erreur SQL (vérif email) : " . $stmt->error);
+                $email_err = "Oops! Une erreur interne est survenue. Veuillez réessayer plus tard.";
+            }
+            $stmt->close();
+        }
+    }
+
+    // =================================================================
+    // B. VALIDATION DU MOT DE PASSE ET CONFIRMATION
     // =================================================================
     if(empty(trim($_POST["password"]))){
         $password_err = "Veuillez entrer un mot de passe.";
@@ -68,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // --- 1. Règle de Longueur ---
         if(strlen($input_password) < 10){
             $password_err = "Le mot de passe doit contenir au moins 10 caractères.";
-        // --- 2. Règle de Complexité (Majuscule, Minuscule, Chiffre, Caractère Spécial) ---
+        // --- 2. Règle de Complexité
         } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/', $input_password)) {
             $password_err = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.";
         } else {
@@ -81,7 +109,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $confirm_password_err = "Veuillez confirmer le mot de passe.";
     } else{
         $confirm_password = trim($_POST["confirm_password"]);
-        // Attention : Ne vérifier la correspondance que si aucune erreur de force n'a été détectée
         if(empty($password_err) && ($password != $confirm_password)){
             $confirm_password_err = "Les mots de passe ne correspondent pas.";
         }
@@ -89,17 +116,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // =================================================================
     // C. INSCRIPTION DANS LA BASE DE DONNÉES (après validation)
+    // ATTENTION : 'email' ajouté dans la requête SQL et dans bind_param
     // =================================================================
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
+    if(empty($username_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err)){
         
-        $sql = "INSERT INTO $table_name (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO $table_name (username, email, password) VALUES (?, ?, ?)";
           
-        // Utilisation de l'approche Orientée Objet pour l'insertion
         if($stmt = $conn->prepare($sql)){
-            $stmt->bind_param("ss", $param_username, $param_password);
+            // Modifié : Ajout du 's' pour l'email et de la variable $param_email
+            $stmt->bind_param("sss", $param_username, $param_email, $param_password);
             
             $param_username = $username;
-            // Sécurité : Hachage du mot de passe avec PASSWORD_DEFAULT (méthode standard)
+            $param_email = $email; // Le nouvel e-mail
             $param_password = password_hash($password, PASSWORD_DEFAULT);
             
             if($stmt->execute()){
@@ -107,7 +135,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 header("location: login.php?status=success_inscription");
                 exit;
             } else{
-                // Sécurité : Enregistrement de l'erreur interne, message générique à l'utilisateur
                 error_log("Erreur SQL lors de l'insertion de l'utilisateur : " . $stmt->error);
                 echo "Une erreur s'est produite lors de l'inscription. Veuillez réessayer plus tard.";
             }
@@ -162,6 +189,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <?php
             if(!empty($username_err)){
                 echo '<span class="invalid-feedback">' . htmlspecialchars($username_err) . '</span>';
+            }
+            ?>
+
+            <label for="email">E-mail :</label>
+            <input type="email" id="email" name="email"
+                value="<?php echo htmlspecialchars($email ?? ''); ?>"
+                class="<?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" required>
+            <?php
+            if(!empty($email_err)){
+                echo '<span class="invalid-feedback">' . htmlspecialchars($email_err) . '</span>';
             }
             ?>
 

@@ -393,3 +393,36 @@ body {
     /* ... */
     margin-bottom: 0px; /* Assurez-vous qu'il n'y a pas trop de marge en bas */
 }
+
+/* AJOUTÉ : Styles pour les messages d'erreur et le nouveau champ email */
+
+/* Assure que les styles d'input s'appliquent aussi au type 'email' */
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"] { /* NOUVEAU */
+    width: 100%; 
+    padding: 12px 1px;
+    font-size: 14px;
+    color: #00ff00; 
+    background-color: #0a0a0a; 
+    border: 1px solid #007700; 
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none; 
+}
+
+/* Styles pour le cas où l'input a une erreur de validation */
+.login-form input.is-invalid {
+    border-color: #ff0000; /* Bordure rouge pour l'erreur */
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.6); 
+}
+
+/* Styles pour le message d'erreur */
+.invalid-feedback {
+    color: #ff0000; /* Texte rouge vif */
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 5px; /* Petit espace sous le message */
+    display: block; /* Pour qu'il prenne toute la largeur */
+    padding-left: 5px;
+}
