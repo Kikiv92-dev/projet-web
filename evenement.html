@@ -96,6 +96,12 @@
                     <p>Préparez-vous pour le fromage fondu, les pommes de terre et la bonne humeur !</p>
                     <form action="inscription_event.php" method="POST" class="registration-form">
                         <input type="hidden" name="evenement" value="Raclette Party">
+                        
+                        <div class="form-group">
+                            <label for="email-rac">Email :</label> <span class="input-icon" style="color: #007bff;">✉️</span>
+                            <input type="email" id="email-rac" name="email" required>
+                        </div>
+                        
                         <div class="form-group">
                             <label for="nom-rac">Nom :</label> <span class="input-icon" style="color: #FFD700;">🧀</span>
                             <input type="text" id="nom-rac" name="nom" required>
@@ -121,6 +127,12 @@
                     <p>Veuillez remplir les informations pour valider votre participation au tirage de la fève !</p>
                     <form action="inscription_event.php" method="POST" class="registration-form">
                         <input type="hidden" name="evenement" value="Fête de la galette des rois">
+                        
+                        <div class="form-group">
+                            <label for="email-gal">Email :</label>
+                            <input type="email" id="email-gal" name="email" required>
+                        </div>
+                        
                         <div class="form-group">
                             <label for="nom-gal">Nom :</label>
                             <input type="text" id="nom-gal" name="nom" required>
@@ -146,6 +158,12 @@
                 <p>Réservez votre place pour une soirée magique d'échange de cadeaux et de bonne humeur !</p>
                 <form action="inscription_event.php" method="POST" class="registration-form">
                     <input type="hidden" name="evenement" value="Soirée de Noël">
+                    
+                    <div class="form-group">
+                        <label for="email-noel">Email :</label>
+                        <span class="input-icon">📧</span> <input type="email" id="email-noel" name="email" required>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="nom-noel">Nom :</label>
                         <span class="input-icon">🎁</span> <input type="text" id="nom-noel" name="nom" required>
@@ -179,7 +197,7 @@
     <div id="modal" class="modal hidden" aria-hidden="true">
         <div class="modal-overlay"></div>
         <div class="modal-box">
-            <button class="modal-close" aria-label="Fermer">&times;</button>
+            <button class="modal-close" aria-label="Fermer">×</button>
             <div class="modal-body"></div>
         </div>
     </div>
@@ -189,11 +207,51 @@
             const modal = document.getElementById('modal');
             const modalBody = modal.querySelector('.modal-body');
             const closeBtn = modal.querySelector('.modal-close');
+            const statusContainer = document.getElementById('status-message-container'); // NOUVEAU
             
-            // Sélectionne tous les boutons qui ouvrent une modale (S'inscrire)
             const registerButtons = document.querySelectorAll('a.event-button[data-template-id]');
-            // Sélectionne tous les nouveaux boutons qui ouvrent la carte (Lieu 📍)
             const locationButtons = document.querySelectorAll('.location-button');
+            
+            // --- NOUVELLE FONCTION : Affichage des messages de statut ---
+            const displayStatusMessage = (message, type = 'success') => {
+                statusContainer.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+                statusContainer.style.display = 'block';
+                // Efface le message après 8 secondes
+                setTimeout(() => {
+                    statusContainer.style.display = 'none';
+                    statusContainer.innerHTML = '';
+                }, 8000);
+            };
+            
+            // --- NOUVELLE FONCTION : Gestion des paramètres URL ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const success = urlParams.get('success');
+            const errorMsg = urlParams.get('error');
+            const eventName = urlParams.get('event');
+            const emailError = urlParams.get('email_error');
+            const smsError = urlParams.get('sms_error');
+
+            if (success === 'true' && eventName) {
+                let message = `Inscription à l'événement "${decodeURIComponent(eventName)}" réussie !`;
+                
+                if (emailError) {
+                    message += " ⚠️ E-mail de confirmation non envoyé (erreur serveur).";
+                }
+                if (smsError) {
+                    message += " ⚠️ SMS de confirmation non envoyé (erreur API).";
+                }
+                
+                displayStatusMessage(message, 'success');
+                
+            } else if (errorMsg) {
+                displayStatusMessage(`Erreur lors de l'inscription : ${decodeURIComponent(errorMsg)}`, 'error');
+            }
+
+            // Nettoyer l'URL après l'affichage du message (pour éviter que le message ne réapparaisse au rechargement)
+            if (success || errorMsg) {
+                history.replaceState(null, '', 'evenement.html');
+            }
+            // ------------------------------------------------------------------
 
             // Fonction pour afficher la modale
             const showModal = (contentHTML) => {
@@ -207,7 +265,6 @@
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    // Récupère l'ID du template à utiliser
                     const templateId = btn.getAttribute('data-template-id');
                     const template = document.getElementById(templateId);
 
@@ -223,19 +280,16 @@
                     const address = btn.getAttribute('data-location');
                     const eventTitle = btn.getAttribute('data-event-title');
                     
-                    // Récupère le template de la carte
                     const mapTemplate = document.getElementById('map-modal-template');
                     
                     if (mapTemplate && address) {
-                        // Injecte le contenu du template de la carte
                         showModal(mapTemplate.innerHTML);
                         
-                        // Construit l'URL pour l'API Google Maps Embed (utilisation d'une adresse pour la recherche)
+                        // Construit l'URL pour l'API Google Maps Embed
                         const encodedAddress = encodeURIComponent(address);
-                        // REMPLACEZ 'VOTRE_CLE_API_GOOGLE_MAPS_ICI' par votre clé API Google Maps !
+                        // IMPORTANT : URL d'exemple. Vous devez avoir une CLÉ API valide !
                         const mapUrl = `https://www.google.com/maps/embed/v1/place?q=${encodedAddress}&key=AIzaSyBUF-nMqx2r19iHmnzkbeaR1nWopM-atms`;
                         
-                        // Met à jour l'iframe, le titre et l'adresse
                         const mapIframe = document.getElementById('google-map-iframe');
                         const mapTitle = document.getElementById('event-map-title');
                         const mapAddressText = document.getElementById('map-address-text');
@@ -249,7 +303,7 @@
             });
 
 
-            // Gestionnaires de fermeture (inchangés)
+            // Gestionnaires de fermeture
             closeBtn.addEventListener('click', () => { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); });
             modal.addEventListener('click', (ev) => { if (ev.target === modal || ev.target.classList.contains('modal-overlay')) { modal.classList.add('hidden'); modal.setAttribute('aria-hidden', 'true'); } });
 

@@ -33,6 +33,39 @@ body {
 }
 
 /* ========================================================== */
+/* --- NOUVEAU : Messages de Statut (Succès/Erreur) --- */
+/* ========================================================== */
+
+#status-message-container {
+    position: fixed;
+    top: 100px; /* Sous la navbar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    z-index: 1000;
+    display: none; /* Caché par défaut, affiché par JS */
+    text-align: center;
+    border-radius: 8px;
+    padding: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid;
+}
+
+.status-message.success {
+    background-color: #1a4f1a; /* Vert foncé */
+    color: #00ff00; /* Vert Néon */
+    border-color: #00ff00;
+}
+
+.status-message.error {
+    background-color: #5f1a1a; /* Rouge foncé */
+    color: #ff0000; /* Rouge vif */
+    border-color: #ff0000;
+}
+
+/* ========================================================== */
 /* --- 2. Barre de Navigation --- */
 /* ========================================================== */
 
@@ -65,11 +98,7 @@ body {
     color: #00e600; /* MODIFIÉ : Vert légèrement moins vif que #00ff66, mais toujours lumineux */
     border-bottom-color: #00e600;
     /* MODIFIÉ : Contour blanc plus fin (décalage à 0.5px) */
-    text-shadow: 
-        0.5px 0.5px 0 white,   
-        -0.5px -0.5px 0 white, 
-        0.5px -0.5px 0 white,  
-        -0.5px 0.5px 0 white;  
+    text-shadow: 0 0 1px white, 0 0 1px white; /* Ombre simple pour contour */
     cursor: pointer; 
 }
 
@@ -83,7 +112,7 @@ body {
     display: flex;
     flex-direction: column; 
     align-items: center;
-    padding-top: 30px; /* À ajuster si le contenu semble trop haut ou trop bas */
+    padding-top: 30px; 
     padding-bottom: 50px; 
     position: relative; 
 }
@@ -105,25 +134,10 @@ body {
     object-fit: contain;
 }
 
-.accueil-text {
-    color: #00ff00;
-    font-size: 100px; 
-    text-align: center;
-    max-width: 600px;
-    line-height: 1.5;
-}
-
-.text-text {
-    font-size: 35px;
-    color: #00ff00;
-    text-align: center;
-    max-width: 600px;
-    margin-top: 5px;
-    line-height: 1.4;
-}
+/* ... (Styles .accueil-text et .text-text inchangés si présents) ... */
 
 /* ========================================================== */
-/* --- 4. Styles Spécifiques aux Événements (Consolidé) --- */
+/* --- 4. Styles Spécifiques aux Événements (Cartes) --- */
 /* ========================================================== */
 
 .page-title {
@@ -229,14 +243,37 @@ body {
     margin-top: 15px; 
 }
 
-/* --- Bouton d'inscription --- */
+/* --- Bouton Lieu (Nouveau) --- */
+.location-button {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: #00ff00; 
+    background-color: #1a1a2b; /* Fond sombre */
+    border: 2px solid #00ff00;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
 
+.location-button:hover {
+    background-color: #00ff00; 
+    color: #000000;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+}
+
+
+/* --- Bouton d'inscription --- */
 .event-button {
     display: block;
     text-decoration: none;
     text-transform: uppercase;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 10px; /* Réduit pour faire de la place au bouton Lieu */
     padding: 10px 20px;
     border-radius: 5px;
     color: #000000; 
@@ -273,428 +310,207 @@ body {
 }
 
 /* ========================================================== */
-/* --- Modal Raclette --- */
+/* --- 5. Styles Modales (Général et Formulaires) --- */
 /* ========================================================== */
 
-/* Scoped copy of styles from "page dacceil raglette.html" prefixed by .raglette-wrapper */
-                .raglette-wrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                    margin: 0;
-                    font-family: Arial, sans-serif;
-                    padding: 20px;
-                }
-
-                .raglette-wrapper .fromage-fixed-left {
-                    position: fixed;
-                    bottom: 10px;
-                    left: 10px;
-                    max-height: 200px;
-                    width: auto;
-                    z-index: 1000;
-                    transform: rotate(-5deg);
-                }
-
-                .raglette-wrapper .vin-top-left {
-                    position: fixed;
-                    top: 10px;
-                    left: 10px;
-                    max-height: 100px;
-                    width: auto;
-                    z-index: 1000;
-                    transform: rotate(-15deg);
-                }
-
-                .raglette-wrapper .pomme-de-terre-top-right {
-                    position: fixed;
-                    top: 10px;
-                    right: 10px;
-                    max-height: 100px;
-                    width: auto;
-                    z-index: 1000;
-                    transform: rotate(15deg);
-                }
-
-                .raglette-wrapper .registration-container {
-                    background-color: rgba(255, 255, 240, 0.98);
-                    padding: 40px;
-                    border-radius: 15px;
-                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-                    width: 100%;
-                    max-width: 400px;
-                    text-align: center;
-                    border: 4px solid #FFD700;
-                }
-
-                .raglette-wrapper h1 {
-                    color: #8B4513;
-                    margin-bottom: 10px;
-                    font-size: 2em;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    font-weight: bold;
-                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-                }
-
-                .raglette-wrapper h1 .raclette-icon {
-                    margin: 0 10px;
-                    font-size: 1.2em;
-                    color: #FFD700;
-                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-                }
-
-                .raglette-wrapper p {
-                    color: #555;
-                    margin-bottom: 25px;
-                    font-style: italic;
-                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-                }
-
-                .raglette-wrapper .form-group {
-                    text-align: left;
-                    margin-bottom: 20px;
-                    position: relative;
-                }
-
-                .raglette-wrapper label {
-                    display: block;
-                    margin-bottom: 8px;
-                    font-weight: bold;
-                    color: #444;
-                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-                }
-
-                .raglette-wrapper .input-icon {
-                    position: absolute;
-                    left: 10px;
-                    top: 60%;
-                   transform: translateY(-50%);
-                   font-size: 1.1em;
-                   text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-               }
-               .raglette-wrapper input[type="text"],
-               .raglette-wrapper input[type="tel"] {
-                   width: calc(100% - 40px);
-                   padding: 12px 12px 12px 38px;
-                   border: 1px solid #D2B48C;
-                   border-radius: 5px;
-                   box-sizing: border-box;
-                   font-size: 1em;
-                   background-color: white;
-                   color: #333;
-               }
-               .raglette-wrapper .submit-btn {
-                   background-color: #8B4513;
-                   color: #FFD700;
-                   padding: 15px 30px;
-                   border: none;
-                   border-radius: 8px;
-                   cursor: pointer;
-                   font-size: 1.2em;
-                   font-weight: bold;
-                   transition: background-color 0.3s ease, transform 0.1s;
-                   margin-top: 20px;
-                   display: inline-flex;
-                   align-items: center;
-                   justify-content: center;
-                   box-shadow: 0 4px #A0522D;
-               }
-               .raglette-wrapper .submit-btn .btn-icon {
-                   margin-left: 10px;
-                   font-size: 1.2em;
-                   color: #FFD700;
-               }
-               .raglette-wrapper .submit-btn:hover {
-                   background-color: #A0522D;
-                   transform: translateY(-1px);
-                   box-shadow: 0 5px #8B4513;
-               }
-               .raglette-wrapper .submit-btn:active {
-                   transform: translateY(3px);
-                   box-shadow: 0 1px #8B4513;
-               }
-
-        /* Minimal modal container styles (keeps form look intact) */
-        .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2000; }
-        .modal.hidden { display: none; }
-        .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.75); }
-        .modal-box { position: relative; z-index: 2; width: 95%; max-width: 520px; margin: 20px; }
-        .modal-close { position: absolute; right: -10px; top: -10px; background: #000; color: #0f0; border: 2px solid #0f0; border-radius: 50%; width: 36px; height: 36px; font-size: 20px; cursor: pointer; }
-        .modal-body { padding: 0; }
-        
-        /* Styles Galette des Rois (AJUSTÉS pour correspondre au visuel fourni) */
-
-.galette-wrapper {
-    /* Wrapper extérieur - couleur dorée/jaune de la galette */
-    background: linear-gradient(to bottom, #ff9d00, #ffc800); 
-    padding: 5px; /* Marge autour du formulaire interne */
-    border-radius: 20px; /* Rayon extérieur */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+.modal { 
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2000; 
+}
+.modal.hidden { 
+    display: none; 
+}
+.modal-overlay { 
+    position: absolute; inset: 0; background: rgba(0,0,0,0.75); 
+}
+.modal-box { 
+    position: relative; z-index: 2; width: 95%; max-width: 520px; margin: 20px; 
+}
+.modal-close { 
+    position: absolute; right: -10px; top: -10px; background: #000; color: #0f0; border: 2px solid #0f0; border-radius: 50%; width: 36px; height: 36px; font-size: 20px; cursor: pointer; 
+}
+.modal-body { 
+    padding: 0; 
 }
 
-.galette-wrapper .registration-container {
-    /* Conteneur principal du formulaire - intérieur légèrement crème/jaune clair */
-    background-color: #ffea00; /* Jaune très pâle, presque crème */
-    padding: 55px;
-    border-radius: 15px; /* Rayon intérieur */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px; /* Taille du formulaire */
-    margin: auto; /* IMPORTANT: Centrage horizontal */
-    text-align: center;
+/* Styles pour le conteneur des formulaires */
+.registration-form {
+    padding-top: 15px;
 }
-
-.galette-wrapper h1 {
-    /* Couleur du titre, légèrement plus foncée pour le contraste */
-    color: #A0522D; /* Couleur terre de sienne (brun foncé) */
-    margin-bottom: 10px;
-    font-size: 1.8em;
+.registration-container h1, .registration-container p {
+    color: #333; /* Remplacer par la couleur spécifique de chaque thème si nécessaire */
 }
-
-.galette-wrapper p {
-    color: #444; 
-    margin-bottom: 25px;
-}
-
-.galette-wrapper .form-group {
-    text-align: left;
+.registration-container .form-group {
     margin-bottom: 20px;
+    position: relative;
 }
-
-.galette-wrapper label {
+.registration-container label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #444; 
 }
-
-.galette-wrapper input[type="text"],
-.galette-wrapper input[type="tel"] {
-    width: 100%;
-    padding: 12px;
+.registration-container input[type="text"],
+.registration-container input[type="tel"],
+.registration-container input[type="email"] { /* AJOUTÉ POUR EMAIL */
+    width: calc(100% - 40px);
+    padding: 12px 12px 12px 38px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 1em;
+    background-color: white;
+    color: #333;
+}
+
+
+/* ========================================================== */
+/* --- 6. Styles Thème Raclette --- */
+/* ========================================================== */
+
+.raglette-wrapper .registration-container {
+    background-color: rgba(255, 255, 240, 0.98);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 4px solid #FFD700;
+}
+.raglette-wrapper h1 { color: #8B4513; }
+.raglette-wrapper p { color: #555; }
+.raglette-wrapper label { color: #444; }
+.raglette-wrapper .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 60%;
+    transform: translateY(-50%);
+    font-size: 1.1em;
+}
+
+/* AJOUT SPÉCIFIQUE RACLETTE EMAIL */
+.raglette-wrapper input[type="email"] {
+    /* Assure que l'input email utilise le style Raclette */
+    border: 1px solid #007bff; /* Un bleu pour l'e-mail */
+}
+
+
+/* --- Le reste des styles Raclette (h1, p, submit-btn...) sont inchangés --- */
+.raglette-wrapper h1 .raclette-icon { margin: 0 10px; font-size: 1.2em; color: #FFD700; }
+.raglette-wrapper .submit-btn {
+    background-color: #8B4513; color: #FFD700; padding: 15px 30px; border-radius: 8px;
+    box-shadow: 0 4px #A0522D; margin-top: 20px;
+}
+.raglette-wrapper .submit-btn:hover { background-color: #A0522D; transform: translateY(-1px); box-shadow: 0 5px #8B4513; }
+
+/* ========================================================== */
+/* --- 7. Styles Thème Galette des Rois --- */
+/* ========================================================== */
+
+.galette-wrapper {
+    background: linear-gradient(to bottom, #ff9d00, #ffc800); 
+    padding: 5px; 
+    border-radius: 20px; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.galette-wrapper .registration-container {
+    background-color: #ffea00; 
+    padding: 55px;
+    border-radius: 15px; 
+    max-width: 400px;
+}
+.galette-wrapper h1 { color: #A0522D; }
+.galette-wrapper p { color: #444; }
+.galette-wrapper label { color: #444; }
+
+/* AJOUT SPÉCIFIQUE GALETTE EMAIL */
+.galette-wrapper input[type="email"] {
+    /* Le style par défaut sans icône est utilisé ici */
+    width: 100%;
+    padding: 12px;
 }
 
 .galette-wrapper .submit-btn { 
-    /* Fond de bouton de la Galette (Orange) */
     background-color: #FF8C00; 
     color: white;
     padding: 12px 25px;
-    border: none;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
     margin-top: 10px;
 }
+.galette-wrapper .submit-btn:hover { background-color: #E67E00; }
 
-.galette-wrapper .submit-btn:hover {
-    background-color: #E67E00;
-}
-
-/* --- Styles spécifiques à la Modale de Noël --- */
+/* ========================================================== */
+/* --- 8. Styles Thème Noël --- */
+/* ========================================================== */
 
 .noel-wrapper {
-    /* Le fond du wrapper simule le corps (body) de votre fichier original */
-    background-color: #C8102E; /* Rouge de Noël vif */
+    background-color: #C8102E; 
     background-image: url('Gemini_Generated_Image_eba34eeba34eeba3.jpg'); 
     background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    padding: 5px; /* Bordure autour du formulaire */
+    padding: 5px; 
     border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-    
-    /* Pour que le wrapper interne soit centré */
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
-
 .noel-wrapper .registration-container {
-    /* Conteneur principal du formulaire - FOND ROUGE NOËL UNIFIÉ */
     background-color: rgba(153, 25, 45, 0.98); 
     padding: 55px;
-    border-radius: 15px; 
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7); 
-    width: 100%;
-    max-width: 400px;
-    margin: auto; /* Centrage horizontal */
-    text-align: center;
-    border: 4px solid #097a2e; /* Bordure vert sapin */
+    border: 4px solid #097a2e; 
 }
-
-.noel-wrapper h1 {
-    color: #FFD700; 
-    margin-bottom: 10px;
-    font-size: 2em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
-}
-
-.noel-wrapper h1 .noel-icon {
-    margin-right: 10px;
-    font-size: 1.2em;
-    color: #FFD700; 
-}
-
-.noel-wrapper p {
-    color: #F5F5DC; 
-    margin-bottom: 25px;
-    font-style: italic;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.noel-wrapper .form-group {
-    text-align: left;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.noel-wrapper label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #e92e05; 
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
+.noel-wrapper h1 { color: #FFD700; }
+.noel-wrapper p { color: #F5F5DC; }
+.noel-wrapper label { color: #e92e05; }
 .noel-wrapper input[type="text"],
-.noel-wrapper input[type="tel"] {
-    /* Largeur ajustée pour l'icône, attention ici pour ne pas avoir de conflit de width */
+.noel-wrapper input[type="tel"],
+.noel-wrapper input[type="email"] { /* AJOUTÉ POUR EMAIL */
     width: calc(100% - 40px);
     padding: 12px 12px 12px 38px;
     border: 1px solid #FFD700; 
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1em;
-    background-color: rgba(255, 255, 255, 0.9); 
-    color: #333; 
 }
 
+/* AJOUT SPÉCIFIQUE NOËL EMAIL - L'icône Email est gérée par .input-icon global de Noël */
+/* L'icône email (📧) doit aussi être positionnée correctement */
 .noel-wrapper .input-icon {
     position: absolute;
     left: 10px;
-    /* Ajusté la position verticale pour fonctionner correctement dans la modale */
+    /* Ajusté pour correspondre à la position des autres icônes */
     top: 50%; 
     transform: translateY(20px); 
     color: #B22222; 
     font-size: 1.1em;
-    z-index: 10; /* Assure que l'icône est au-dessus de l'input */
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3); 
+    z-index: 10;
 }
 
 .noel-wrapper .submit-btn {
-    background-color: #FFD700; 
-    color: #B22222; 
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2em;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.1s;
-    margin-top: 20px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px #DAA520; 
+    background-color: #FFD700; color: #B22222; box-shadow: 0 4px #DAA520; 
 }
+.noel-wrapper .submit-btn:hover { background-color: #DAA520; transform: translateY(-1px); box-shadow: 0 5px #B22222; }
 
-.noel-wrapper .submit-btn .btn-icon {
-    margin-left: 10px;
-    font-size: 1.2em;
-    color: #B22222; 
-}
+/* ========================================================== */
+/* --- 9. Styles Modale Carte (Map) --- */
+/* ========================================================== */
 
-.noel-wrapper .submit-btn:hover {
-    background-color: #DAA520; 
-    transform: translateY(-1px);
-    box-shadow: 0 5px #B22222;
-}
-
-.noel-wrapper .submit-btn:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px #B22222;
-}
-/* --- Style pour le bouton de localisation (.location-button) --- */
-.location-button {
-    /* Mise en page */
-    display: inline-block;
-    padding: 8px 14px;
-    margin-top: 10px; 
-    margin-right: 10px; /* Laisse de l'espace avec le bouton 'S'inscrire' */
-    font-size: 0.9em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    
-    /* Couleurs et bordure (Style Cyber Green) */
-    cursor: pointer;
-    border: 1px solid #00ff41; /* Bordure verte Matrix */
-    background-color: transparent; 
-    color: #00ff41; 
-    border-radius: 2px;
-    
-    /* Effet d'ombre/glow */
-    box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-    transition: all 0.2s ease-in-out;
-}
-
-.location-button:hover {
-    background-color: #00ff41; /* Inversion des couleurs au survol */
-    color: #1a1a1a; /* Texte très sombre */
-    box-shadow: 0 0 15px #00ff41; /* Effet de glow plus fort */
-    transform: translateY(-1px);
-}
-
-/* --- Style pour les éléments de la modale de la carte (map-modal-template) --- */
-
-/* Titre de la carte */
-.map-wrapper .map-title {
-    color: #00ff41;
-    font-size: 1.6em;
+.map-wrapper {
+    background-color: #1a1a2b; 
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #00ff00;
     text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    border-bottom: 1px dashed rgba(0, 255, 65, 0.4);
 }
-
-/* Style de l'adresse sous la carte */
-.map-address-display {
-    color: #FFFFFF;
-    font-size: 1em;
-    text-align: center;
-    margin-top: 15px;
+.map-title {
+    color: #00ff00;
+    font-size: 24px;
+    margin-bottom: 15px;
 }
-
-.map-address-display strong {
-    color: #FFD700; /* Jaune/Or pour l'adresse spécifique */
-    font-weight: bold;
-}
-
-/* Conteneur de l'iframe pour un meilleur contrôle de la bordure et du glow */
 #map-container {
-    padding: 10px; /* Espace autour de la carte */
-    background-color: #111; /* Fond très sombre */
-    border: 2px solid #00ff41; /* Bordure verte nette */
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.7); /* Gros effet de glow */
+    margin-bottom: 15px;
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
-
-/* L'iframe de la carte */
 #google-map-iframe {
-    width: 100%;
-    height: 450px;
     display: block;
-    border: none; /* Supprime la bordure interne de l'iframe */
+}
+.map-address-display {
+    color: #ffffff;
+    font-size: 18px;
+}
+.map-address-display strong {
+    color: #00ff00;
 }

@@ -1,104 +1,142 @@
 <?php
 // =================================================================
-// 1. GESTION DES ERREURS (CRITIQUE EN PRODUCTION !)
+// 1. GESTION DES ERREURS 
 // =================================================================
-// Désactiver l'affichage des erreurs en production.
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 // =================================================================
-// 2. LISTE BLANCHE DES ÉVÉNEMENTS (CRITIQUE !)
+// 2. FONCTIONS D'ENVOI (SMS SIMULÉ & EMAIL RÉEL)
 // =================================================================
-// Définir une liste de valeurs autorisées pour le champ caché 'evenement'
-$evenements_autorises = ["Raclette Party", "Soirée de Noël", "Fête de la galette des rois"]; 
-// Ajoutez ici tous les noms d'événements valides
 
-// Inclure le fichier de connexion à la base de données
-require_once "config.php";
-// Note : Le fichier config.php doit utiliser l'approche Orientée Objet ($conn = new mysqli(...))
+function envoyer_sms_confirmation(string $telephone, string $message): bool {
+    // SIMULATION - À remplacer par une API réelle (Twilio, Vonage...)
+    error_log("SIMULATION SMS envoyé à $telephone : $message");
+    return true; 
+}
 
-// Définir les variables et initialiser les erreurs
-$nom = $prenom = $telephone = $evenement = "";
+function envoyer_email_confirmation(string $destinataire_email, string $nom_prenom, string $evenement): bool {
+    
+    $sujet = "✅ Confirmation d'inscription à l'événement : " . $evenement;
+    $expediteur_email = "mailt5573@gmail.com"; // REMPLACER par votre adresse réelle
+    $expediteur_nom = "BDE Guardia";
+
+    $corps_html = "
+    <html>
+    <head><title>$sujet</title></head>
+    <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+        <div style='max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>
+            <h2 style='color: #007bff;'>Bonjour $nom_prenom,</h2>
+            <p>Votre inscription à l'événement <b>$evenement</b> est confirmée.</p>
+            <p>Un récapitulatif des informations vous sera envoyé à l'approche de l'événement.</p>
+            <p>À très vite !</p>
+            <p>L'équipe du BDE Guardia</p>
+        </div>
+    </body>
+    </html>";
+
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= "From: $expediteur_nom <$expediteur_email>" . "\r\n";
+    $headers .= "Reply-To: $expediteur_nom <$expediteur_email>" . "\r\n";
+
+    // Envoi de l'e-mail
+    if (@mail($destinataire_email, $sujet, $corps_html, $headers)) {
+        error_log("Email envoyé à $destinataire_email pour l'événement $evenement");
+        return true;
+    } else {
+        error_log("ÉCHEC ENVOI EMAIL : La fonction mail() de PHP a échoué.");
+        return false;
+    }
+}
+
+// =================================================================
+// 3. LOGIQUE D'INSCRIPTION, VALIDATION ET SAUVEGARDE
+// =================================================================
+
+$evenements_autorises = ["Raclette Party", "Soirée de Noël", "Fête de la galette des rois", "BDE Santa Secret"]; 
+require_once "config.php"; 
+
+$nom = $prenom = $telephone = $email = $evenement = "";
 $erreur = "";
+$email_succes = true;
 
-// Traitement après la soumission du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 1. Validation et récupération des données
-    // Sécurité : Utilisation de FILTER_SANITIZE_STRING (maintenant FILTER_SANITIZE_SPECIAL_CHARS en PHP 8.1+)
+    // Récupération des données (y compris le nouvel EMAIL)
     $nom = trim(filter_input(INPUT_POST, "nom", FILTER_SANITIZE_SPECIAL_CHARS) ?? '');
     $prenom = trim(filter_input(INPUT_POST, "prenom", FILTER_SANITIZE_SPECIAL_CHARS) ?? '');
-    // Sécurité : On nettoie le numéro de téléphone pour ne garder que les chiffres
-    $telephone = trim(filter_input(INPUT_POST, "telephone", FILTER_SANITIZE_NUMBER_INT) ?? '');
-    
-    // C'EST LA CLÉ : on récupère et on nettoie le champ caché 'evenement'
+    $telephone = trim(filter_input(INPUT_POST, "telephone", FILTER_SANITIZE_NUMBER_INT) ?? ''); 
+    $email = trim(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? ''); // NOUVEAU
     $evenement_input = trim(filter_input(INPUT_POST, "evenement", FILTER_SANITIZE_SPECIAL_CHARS) ?? '');
-    
-    // =================================================================
-    // A. VALIDATION CRITIQUE : VÉRIFICATION DE LA LISTE BLANCHE (Whitelist)
-    // =================================================================
+
+    // Validation (mise à jour pour inclure l'email)
     if (!in_array($evenement_input, $evenements_autorises)) {
-        // Alerte critique : un attaquant a modifié le champ caché !
-        $erreur = "Erreur de validation de l'événement. Tentative de soumission non autorisée.";
-        error_log("Tentative d'injection sur le champ evenement: " . $evenement_input);
-        
-    } elseif (empty($nom) || empty($prenom) || empty($telephone) || empty($evenement_input)) {
-        // Validation des champs obligatoires
-        $erreur = "Veuillez remplir tous les champs du formulaire.";
-        
+        $erreur = "Erreur de validation de l'événement.";
+    } elseif (empty($nom) || empty($prenom) || empty($telephone) || empty($evenement_input) || empty($email)) {
+        $erreur = "Veuillez remplir tous les champs du formulaire, y compris l'e-mail.";
     } elseif (strlen($telephone) < 10) {
-        // Validation spécifique du téléphone (ex: minimum 10 chiffres)
         $erreur = "Le numéro de téléphone est invalide ou trop court.";
-        
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) { // Validation de l'adresse e-mail
+        $erreur = "L'adresse e-mail fournie est invalide.";
     } else {
-        // Si toutes les validations passent, on assigne la valeur nettoyée
         $evenement = $evenement_input;
     }
 
-    // 2. Si aucune erreur, procéder à l'insertion
+    // 4. Si aucune erreur, procéder à l'insertion et à l'envoi
     if (empty($erreur)) {
         
-        $sql = "INSERT INTO inscriptions_evenements (nom, prenom, telephone, evenement) VALUES (?, ?, ?, ?)";
+        // Requête SQL mise à jour : inclusion de la colonne 'email'
+        $sql = "INSERT INTO inscriptions_evenements (nom, prenom, email, telephone, evenement) VALUES (?, ?, ?, ?, ?)"; 
 
-        // Sécurité : Utilisation de l'approche Orientée Objet pour la compatibilité avec config.php
         if ($stmt = $conn->prepare($sql)) {
-            // Lier les variables à la requête préparée
-            $stmt->bind_param("ssss", $param_nom, $param_prenom, $param_telephone, $param_evenement);
+            // Lier les variables (email est le 3ème 's')
+            $stmt->bind_param("sssss", $param_nom, $param_prenom, $param_email, $param_telephone, $param_evenement); 
             
-            // Définir les paramètres (après la validation)
             $param_nom = $nom;
             $param_prenom = $prenom;
+            $param_email = $email; // NOUVEAU PARAMÈTRE
             $param_telephone = $telephone;
             $param_evenement = $evenement; 
 
-            // Exécuter la requête
             if ($stmt->execute()) {
-                // Redirection après succès
-                header("location: evenement.html?success=true&event=" . urlencode($evenement));
+                
+                // --- ENVOI DES NOTIFICATIONS ---
+                $nom_complet = $prenom . " " . $nom;
+                $email_succes = envoyer_email_confirmation($email, $nom_complet, $evenement);
+                $sms_succes = envoyer_sms_confirmation($telephone, "Bonjour $prenom, votre inscription à '$evenement' est confirmée !"); 
+                
+                
+                // Redirection avec indication du succès/échec des envois
+                $redirect_url = "evenement.html?success=true&event=" . urlencode($evenement);
+                if (!$email_succes) {
+                    $redirect_url .= "&email_error=true";
+                }
+                if (!$sms_succes) {
+                    $redirect_url .= "&sms_error=true";
+                }
+                
+                header("location: " . $redirect_url);
                 exit();
+
             } else {
-                // Sécurité : Ne pas afficher l'erreur SQL
                 error_log("Erreur SQL lors de l'inscription : " . $stmt->error);
                 $erreur = "Oups! Une erreur interne est survenue. Veuillez réessayer plus tard.";
             }
 
             $stmt->close();
         } else {
-            // Gérer les erreurs de préparation de la requête
             error_log("Erreur de préparation SQL: " . $conn->error);
             $erreur = "Oups! Erreur de préparation de la requête.";
         }
     }
     
-    // Affichage de l'erreur si elle existe
     if (!empty($erreur)) {
-        // En cas d'erreur, on peut rediriger vers la page d'événement avec un paramètre d'erreur.
-        // Pour l'exemple, affichons-la ici
-        echo "Erreur d'inscription : " . htmlspecialchars($erreur); 
+        header("location: evenement.html?error=" . urlencode($erreur));
+        exit();
     }
 }
-// Fermer la connexion à la base de données
 if (isset($conn)) {
     $conn->close();
 }
