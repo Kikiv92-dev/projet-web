@@ -57,8 +57,8 @@ body {
     text-shadow: 
         0.5px 0.5px 0 white,   
         -0.5px -0.5px 0 white, 
-        0.5px -0.5px 0 white,   
-        -0.5px 0.5px 0 white;   
+        0.5px -0.5px 0 white,  
+        -0.5px 0.5px 0 white;  
     cursor: pointer; 
 }
 
@@ -253,16 +253,17 @@ body {
 }
 
 /* ========================================================== */
-/* --- STYLE DU FORMULAIRE (LOGIN/INSCRIPTION) --- */
+/* --- AJOUT POUR LE FORMULAIRE DE CONNEXION (Design Matrix) --- */
 /* ========================================================== */
 
 /* Ajustement du conteneur parent pour le centrage vertical dans l'espace restant */
+/* Assure que le contenu, y compris le formulaire, est centré verticalement */
 .content-section {
     justify-content: center; 
 }
 
 
-/* Style du conteneur du formulaire */
+/* Style du conteneur du formulaire (sélecteur basé sur votre structure HTML probable) */
 .content-interior {
     /* Style de la boîte (cadre Matrix) */
     background-color: #05050e; 
@@ -280,7 +281,7 @@ body {
     align-items: center;
 }
 
-/* Titre "S'inscrire" / "Se connecter" */
+/* Titre "Connexion" (h1 dans le conteneur) */
 .content-interior h1 {
     color: #00ff00; 
     font-size: 36px;
@@ -300,7 +301,7 @@ body {
     width: 100%;
 }
 
-/* Style des labels */
+/* Style des labels (Nom d'utilisateur et Mot de passe) */
 .login-form label {
     color: #00e600; 
     font-size: 18px;
@@ -308,14 +309,10 @@ body {
     margin-top: 15px;
 }
 
-/* -------------------------------------------------------------------------- */
-/* CORRECTION : Styles fusionnés pour TOUS les inputs (text, password, email) */
-/* -------------------------------------------------------------------------- */
-
-/* Styles principaux pour les champs de saisie (input) */
+/* Styles pour les champs de saisie (input[type="text"] et input[type="password"]) */
 .login-form input[type="text"],
 .login-form input[type="password"],
-.login-form input[type="email"] { 
+.login-form input[type="email"] {
     width: 100%; 
     padding: 12px 1px;
     font-size: 14px;
@@ -327,35 +324,15 @@ body {
     outline: none; 
 }
 
-/* Styles pour le focus (lueur verte) */
 .login-form input[type="text"]:focus,
 .login-form input[type="password"]:focus,
-.login-form input[type="email"]:focus { /* Ajouté pour l'email */
+.login-form input[type="email"]:focus {
+    /* Effet de lueur verte au focus */
     border-color: #00ff00; 
     box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); 
 }
 
-/* Styles pour le cas où l'input a une erreur de validation */
-.login-form input.is-invalid {
-    border-color: #ff0000; /* Bordure rouge pour l'erreur */
-    box-shadow: 0 0 8px rgba(255, 0, 0, 0.6); 
-}
-
-/* Styles pour le message d'erreur */
-.invalid-feedback {
-    color: #ff0000; /* Texte rouge vif */
-    font-size: 13px;
-    margin-top: 5px;
-    margin-bottom: 5px; 
-    display: block; 
-    padding-left: 5px;
-}
-
-/* -------------------------------------------------------------------------- */
-/* FIN DES INPUTS */
-/* -------------------------------------------------------------------------- */
-
-/* Styles pour le bouton de connexion/inscription */
+/* Styles pour le bouton de connexion */
 .login-form button[type="submit"] {
     margin-top: 30px;
     padding: 12px 30px;
@@ -370,7 +347,6 @@ body {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     align-self: center; /* Centrer le bouton */
     width: 60%; 
-    margin-bottom: 0px; /* Assurez-vous qu'il n'y a pas trop de marge en bas */
 }
 
 .login-form button[type="submit"]:hover {
@@ -411,4 +387,30 @@ body {
     background-color: #00ff00; /* Fond vert néon au survol */
     border-color: #00ff00;
     cursor: pointer;
+}
+
+/* Optionnel : Ajuster légèrement la marge du bouton de connexion pour un meilleur espacement */
+.login-form button[type="submit"] {
+    /* Conserve vos styles existants */
+    /* ... */
+    margin-bottom: 0px; /* Assurez-vous qu'il n'y a pas trop de marge en bas */
+}
+
+.login-form #email {
+    /* Style de base */
+    background-color: #0a0a0a; 
+    border: 1px solid #007700; 
+    color: #00ff00;
+}
+
+.login-form #email:focus {
+    /* Style au focus */
+    border-color: #00ff00; 
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); 
+}
+
+/* Fix pour le cas d'erreur */
+.login-form #email.is-invalid {
+    border-color: #ff0000;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
 }
