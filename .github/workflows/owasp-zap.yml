@@ -18,9 +18,32 @@ jobs:
         run: |
           docker network create zapnet || true
 
+      - name: Docker Hub login (optional)
+        run: |
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
+            echo "Logging in to Docker Hub"
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          else
+            echo "No Docker Hub credentials configured; proceeding unauthenticated"
+          fi
+
+      - name: Pull required Docker images with retries
+        run: |
+          set -e
+          IMAGES=(docker.io/library/php:8.1-apache docker.io/owasp/zap2docker-stable)
+          for img in "${IMAGES[@]}"; do
+            echo "Pulling $img"
+            for i in {1..5}; do
+              docker pull "$img" && break || {
+                echo "Pull failed (attempt $i). Retrying in 5s..."
+                sleep 5
+              }
+            done
+          done
+
       - name: Start PHP Apache container
         run: |
-          docker run -d --name web --network zapnet -p 8080:80 -v ${{ github.workspace }}:/var/www/html:ro php:8.1-apache
+          docker run -d --name web --network zapnet -p 8080:80 -v ${{ github.workspace }}:/var/www/html:ro docker.io/library/php:8.1-apache
 
       - name: Wait for web service
         run: |
@@ -32,7 +55,7 @@ jobs:
 
       - name: Run OWASP ZAP baseline scan
         run: |
-          docker run --rm --network zapnet -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://web:80 -r zap-report.html
+          docker run --rm --network zapnet -v $(pwd):/zap/wrk/:rw docker.io/owasp/zap2docker-stable zap-baseline.py -t http://web:80 -r zap-report.html
 
       - name: Upload ZAP report
         uses: actions/upload-artifact@v4
